@@ -1,0 +1,28 @@
+{
+  "name": "contract-scraper",
+  "version": "1.0.0",
+  "description": "A customisable data scraper for the web based on JSON contracts",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamarasaurus/contract-scraper.git"
+  },
+  "keywords": [
+    "scraper",
+    "html",
+    "web",
+    "JSON"
+  ],
+  "author": "Tamara Robichet",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tamarasaurus/contract-scraper/issues"
+  },
+  "homepage": "https://github.com/tamarasaurus/contract-scraper#readme"
+}
