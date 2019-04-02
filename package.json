@@ -8,12 +8,12 @@
     "test": "test"
   },
   "scripts": {
-    "test": "npm test",
+    "test": "ts-mocha ./test/**/*.ts",
     "prepublishOnly": "npm run compile",
     "compile": "tsc -p .",
     "clean": "rm -rf dist",
     "watch": "tsc -w -p ."
- },
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/tamarasaurus/contract-scraper.git"
@@ -31,9 +31,12 @@
   },
   "homepage": "https://github.com/tamarasaurus/contract-scraper#readme",
   "dependencies": {
+    "@types/expect": "^1.20.4",
+    "@types/mocha": "^5.2.6",
     "cheerio": "^1.0.0-rc.2",
     "mocha": "^6.0.2",
     "puppeteer": "^1.14.0",
+    "ts-mocha": "^6.0.0",
     "ts-node": "^8.0.3",
     "typescript": "^3.4.1"
   },
