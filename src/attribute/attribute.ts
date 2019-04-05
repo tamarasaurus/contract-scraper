@@ -1,4 +1,4 @@
 export interface Attribute {
-    getValue(): string|number
-    normalize(value: any): string|number
+  getValue (): string | number;
+  normalize (value: any): string | number;
 }
