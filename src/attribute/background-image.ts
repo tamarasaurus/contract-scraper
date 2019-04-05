@@ -21,10 +21,10 @@ import { Attribute } from './attribute';
     const image = /(background-image:url\("|')(.*)("|'\))/.exec(style)
     if (image === null) return null
 
-     const match = image[2].split('../')[1]
+     const match = image[2]
 
      if (!match.startsWith('http') && !match.startsWith('www')) {
-      return `${url.protocol}//${path.join(url.host, match)}`
+      return `${root}${path.join(url.host, match)}`
     }
 
      return match
