@@ -1,21 +1,21 @@
 import { Attribute } from './attribute';
 
 export default class Size implements Attribute {
-  private value: number = null;
+  private inputValue: string = null;
 
   public constructor(size: string) {
+    this.inputValue = size;
+  }
+
+  public get value(): number {
+    return this.normalize(this.inputValue);
+  }
+
+  public normalize(size: string): number {
     if (size === undefined || size === null) {
       return null;
     }
 
-    this.value = this.normalize(size);
-  }
-
-  public getValue(): number {
-    return this.value;
-  }
-
-  public normalize(size: string): number {
     const sizeNumber = parseInt(size, 10);
     let parsedSize: number = sizeNumber;
 

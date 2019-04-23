@@ -1,21 +1,21 @@
 import { Attribute } from './attribute';
 
 export default class Price implements Attribute {
-  private value: number = null;
+  private inputValue: string = null;
 
   public constructor(price: string) {
+    this.inputValue = price;
+  }
+
+  public get value(): number {
+    return this.normalize(this.inputValue);
+  }
+
+  public normalize(price: string): number {
     if (price === undefined || price === null) {
       return null;
     }
 
-    this.value = this.normalize(price);
-  }
-
-  public getValue(): number {
-    return this.value;
-  }
-
-  public normalize(price: string): number {
     const strippedString = price.replace(/\s+/g, '');
     const getValue = /\d+/gm;
     const parsedString = strippedString.match(getValue);
