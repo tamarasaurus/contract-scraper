@@ -22,7 +22,7 @@ export default class Size implements Attribute {
     if (Number.isNaN(parsedSize)) {
       const regex = /^\d+|(\b\d+\s+|\d)+\s?(?=m2|M²|m²|m\s)/gm;
       const match = regex.exec(size);
-      parsedSize = match && match[0] ? parseInt(match[0].replace(/\D/gm, ''), 10) : 0;
+      parsedSize = match && match[0] ? parseInt(match[0].replace(/\D/gm, ''), 10) : null;
     }
 
     return parsedSize;
