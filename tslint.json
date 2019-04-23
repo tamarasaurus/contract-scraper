@@ -1,12 +1,12 @@
 {
     "defaultSeverity": "error",
-    "extends": [
-        "tslint:recommended"
-    ],
+    "extends": "tslint-config-airbnb",
     "jsRules": {},
     "rules": {
         "quotemark": [true, "single"],
-        "variable-name": [true, "ban-keywords", "allow-leading-underscore"]
+        "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
+        "import-name": false,
+        "function-name": false
     },
     "rulesDirectory": []
 }
