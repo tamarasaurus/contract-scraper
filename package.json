@@ -33,8 +33,7 @@
     "branches": 99
   },
   "scripts": {
-    "coverage": "nyc mocha",
-    "test": "ts-mocha ./test/**/**/*.ts",
+    "test": "nyc mocha",
     "prepublishOnly": "npm run compile",
     "compile": "tsc -p .",
     "clean": "rm -rf dist",
