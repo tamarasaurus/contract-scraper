@@ -18,10 +18,11 @@ export default class BackgroundImage implements Attribute {
 
   public normalize ([style, root]): string {
     const url = new URL(root);
-    const image = /(background-image:url\("|')(.*)("|'\))/.exec(style);
+    const image = /(background-image:\s?url\((.*)?)\)/.exec(style);
+
     if (image === null) return null;
 
-    const match = image[2];
+    const match = image[2].replace(/'|"/g, '');
 
     if (!match.startsWith('http') && !match.startsWith('www')) {
       return `${root}${path.join(url.host, match)}`;
