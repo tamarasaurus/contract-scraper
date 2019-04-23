@@ -47,4 +47,12 @@ describe('creates a background image attribute', () => {
         const imageWithDoubleQuotes = new BackgroundImage(urlWithDoubleQuotes, rootUrl);
         assert.equal(imageWithDoubleQuotes.getValue(), imageUrl);
     });
+
+    it('returns null if the url is empty', () => {
+        assert.equal(new BackgroundImage('', 'whatever').getValue(), null);
+    });
+
+    it('returns null if the url is invalid', () => {
+        assert.equal(new BackgroundImage('whatever', 'whatever').getValue(), null);
+    })
 });

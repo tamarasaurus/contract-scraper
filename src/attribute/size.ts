@@ -1,4 +1,6 @@
-export default class Size {
+import { Attribute } from './attribute';
+
+export default class Size implements Attribute {
   private value: number = null;
 
   public constructor(size: string) {

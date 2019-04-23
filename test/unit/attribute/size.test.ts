@@ -18,4 +18,13 @@ describe('creates a size attribute', () => {
         assert.equal(new Size('Maison 15mn de l’ocean, avec piscine 5X10 ,110m2').getValue(), 110);
         assert.equal(new Size('CENTRE HISTORIQUE ECUSSON T2 T3 55 m²').getValue(), 55);
     });
+
+    it('returns a zero for an unparseable string', () => {
+        assert.equal(new Size('There is no size in this string').getValue(), 0);
+    });
+
+    it('returns null if the input is null or undefined', () => {
+        assert.equal(new Size(null).getValue(), null);
+        assert.equal(new Size(undefined).getValue(), null);
+    });
 });
