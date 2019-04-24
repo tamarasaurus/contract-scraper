@@ -1,9 +1,9 @@
 class Contract {
-    private readonly data: any;
+  private readonly data: any;
 
-    constructor() {
+  constructor() {
 
-    }
+  }
 }
 
 export default Contract;

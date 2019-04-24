@@ -1,8 +1,8 @@
 import Fetcher from './fetcher';
 import { Page } from '../fetcher/fetcher';
-import request from 'request';
+import request from 'request-promise';
 import randomUserAgent from 'random-useragent';
-import { guessEncoding } from '../tools/encoding';
+import { guessEncoding, encodePageContents } from '../tools/encoding';
 
 export default class RequestFetcher implements Fetcher {
   private url: string;
@@ -14,14 +14,19 @@ export default class RequestFetcher implements Fetcher {
   getPage(): Promise<Page> {
     return this.getPageResponse().then((response) => {
       const { headers, body } = response;
+      const encoding = guessEncoding(headers, body);
       const page: Page = {
-        encoding: guessEncoding(headers, body),
-        contents: body,
+        encoding,
+        contents: encodePageContents(encoding, body),
         url: this.url,
       };
 
       return page;
     });
+  }
+
+  encodePageContents(encoding: string, contents: string): string {
+    return encodePageContents(encoding, contents);
   }
 
   getPageResponse() {

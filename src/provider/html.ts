@@ -56,7 +56,7 @@ export default class HTMLProvider implements Provider {
       return this.getElementDataAttributeKeyValue(element, data);
     }
 
-    const AttributeType = this.attributes[type];
+    const AttributeType = this.attributes[type.toLowerCase()];
     const scrapedAttribute = new AttributeType(value, this.page.url);
 
     return scrapedAttribute.value;

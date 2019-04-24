@@ -16,7 +16,6 @@ const contract = {
   },
 };
 
-
 describe('Scrapes a URL based on JSON configuration', () => {
   it('validates a JSON contract', () => {
     const scraper = new Scraper(

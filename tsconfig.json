@@ -4,7 +4,9 @@
     "target": "es2015",
     "outDir": "./dist",
     "moduleResolution": "node",
-    "declaration": true
+    "declaration": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true
   },
   "include": [
     "test/**/*.ts",
