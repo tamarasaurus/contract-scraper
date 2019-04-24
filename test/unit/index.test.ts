@@ -24,7 +24,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
     );
 
     assert.throws(
-      () => scraper.getDataFromPage(),
+      () => scraper.scrapePage(),
       new Error('Your contract is invalid, please check the specifications'),
     );
   });
@@ -33,7 +33,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
     const scraper = new Scraper('an invalid url', {});
 
     assert.throws(
-      () => scraper.getDataFromPage(),
+      () => scraper.scrapePage(),
       new Error('The URL "an invalid url" you have provided is invalid'),
     );
   });
@@ -111,7 +111,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
 
     scraper.getProvider = sinon.stub().returns(new ProviderStub());
 
-    return scraper.getDataFromPage().then((data) => {
+    return scraper.scrapePage().then((data) => {
       assert.equal(
         JSON.stringify(data),
         JSON.stringify(expectedData),

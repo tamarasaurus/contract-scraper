@@ -42,7 +42,7 @@ const contract = {
   scrapeAfterLoading: false,
   attributes: {
     name: { type: 'text', selector: '.name' },
-    photo: { type: 'backgroundImage', selector: '[data-profile]', attribute: 'style' },
+    photo: { type: 'background-image', selector: '[data-profile]', attribute: 'style' },
     link: { type: 'link', selector: 'a', attribute: 'href' },
     price: { type: 'price', selector: '[data-price]', data: { name: 'price', key: 'amount' } },
     size: { type: 'size', selector: '[data-size]', attribute: 'data-size' },
@@ -87,7 +87,7 @@ it('returns scraped data for a url and contract', () => {
   const scraper = new Scraper(url, contract);
   scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
 
-  return scraper.getDataFromPage().then((data) => {
+  return scraper.scrapePage().then((data) => {
     assert.equal(
       JSON.stringify(expectedData, null, 2),
       JSON.stringify(data, null, 2),

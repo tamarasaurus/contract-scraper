@@ -16,7 +16,7 @@ interface Attributes {
 
 class Scraper {
   public defaultAttributes: any = {
-    backgroundImage: BackgroundImage,
+    'background-image': BackgroundImage,
     link: Link,
     price: Price,
     size: Size,
@@ -33,7 +33,7 @@ class Scraper {
     this.attributes = attributes;
   }
 
-  public getDataFromPage(): Promise<any[]> {
+  public scrapePage(): Promise<any[]> {
     if (!this.contractIsValid()) {
       throw Error('Your contract is invalid, please check the specifications');
     }

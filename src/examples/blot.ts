@@ -1,4 +1,4 @@
-import Scraper from '../../../index';
+import Scraper from '../../index';
 
 const contract = {
   'itemSelector': '.bloc_annonce_habitat',
@@ -18,6 +18,6 @@ const scraper = new Scraper(
   contract,
 );
 
-scraper.getDataFromPage().then((data) => {
+scraper.scrapePage().then((data) => {
   console.log(data);
 });
