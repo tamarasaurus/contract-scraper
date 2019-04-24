@@ -17,6 +17,7 @@ export default class RequestFetcher implements Fetcher {
       const page: Page = {
         encoding: guessEncoding(headers, body),
         contents: body,
+        url: this.url,
       };
 
       return page;

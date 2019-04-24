@@ -1,3 +1,3 @@
 export interface Provider {
-  getScrapedItems(): Promise<[]>;
+  getScrapedItems(): any[];
 }

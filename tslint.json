@@ -7,7 +7,8 @@
         "variable-name": [true, "ban-keywords", "allow-leading-underscore"],
         "import-name": false,
         "function-name": false,
-        "object-literal-key-quotes": false
+        "object-literal-key-quotes": false,
+        "max-line-length": false
     },
     "rulesDirectory": []
 }

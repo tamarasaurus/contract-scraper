@@ -74,7 +74,12 @@ describe('Scrapes a URL based on JSON configuration', () => {
 
     assert.equal(
       JSON.stringify(scraper.getFetcher(false)),
-      JSON.stringify(new RequestFetcher(url))
+      JSON.stringify(new RequestFetcher(url)),
+    );
+
+    assert.equal(
+      JSON.stringify(scraper.getFetcher()),
+      JSON.stringify(new RequestFetcher(url)),
     );
   });
 
@@ -82,6 +87,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
     const url = 'https://google.com';
     const scraper = new Scraper(url, contract);
     const page: Page = {
+      url,
       contents: '',
       encoding: 'fr-FR',
     };

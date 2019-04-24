@@ -13,6 +13,7 @@ export default class PuppeteerFetcher implements Fetcher {
       const page: Page = {
         encoding: '',
         contents: '',
+        url: this.url,
       };
 
       resolve(page);

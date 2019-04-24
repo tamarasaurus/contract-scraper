@@ -33,7 +33,7 @@ class Scraper {
     this.attributes = attributes;
   }
 
-  public getDataFromPage(): Promise<[]> {
+  public getDataFromPage(): Promise<any[]> {
     if (!this.contractIsValid()) {
       throw Error('Your contract is invalid, please check the specifications');
     }
