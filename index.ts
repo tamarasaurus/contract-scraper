@@ -46,25 +46,29 @@ class Scraper {
     const fetcher = this.getFetcher(this.contract.scrapeAfterLoading);
 
     return fetcher.getPage().then((page: Page) => {
-      const provider = this.getProvider(page, attributes);
-
-      return provider.getScrapedItems();
+      return this.getScrapedItems(page, attributes);
     });
+  }
+
+  public getScrapedItems(page: Page, attributes: any) {
+    return this.getProvider(page, attributes).getScrapedItems();
   }
 
   public getAttributes(): { [name: string]: any } {
     return Object.assign(this.defaultAttributes, this.attributes);
   }
 
-  public urlIsValid() {
+  public urlIsValid(): boolean {
     try {
       new URL(this.url);
+
+      return true;
     } catch (e) {
       return false;
     }
   }
 
-  public contractIsValid() {
+  public contractIsValid(): boolean {
     return !(this.contract === null || this.contract === undefined);
   }
 

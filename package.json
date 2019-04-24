@@ -81,6 +81,7 @@
   ],
   "devDependencies": {
     "nyc": "^14.0.0",
+    "sinon": "^7.3.2",
     "source-map-support": "^0.5.12",
     "tslint": "^5.16.0"
   }

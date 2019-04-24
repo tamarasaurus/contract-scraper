@@ -4,6 +4,7 @@ import PuppeteerFetcher from '../../src/fetcher/puppeteer';
 import RequestFetcher from '../../src/fetcher/request';
 import { Page } from '../../src/fetcher/fetcher';
 import HTMLProvider from '../../src/provider/html';
+import * as sinon from 'sinon';
 
 const contract = {
   itemSelector: 'li[itemtype=\http://schema.org/Offer\]',
@@ -12,12 +13,9 @@ const contract = {
   attributes: {
     name: { type: 'text', selector: '[itemprop=\name\]' },
     price: { type: 'price', selector: '[itemprop=\price\]' },
-    description: { type: 'text', selector: '[itemprop=\availableAtOrFrom\]' },
-    size: { type: 'size', selector: '[itemprop=\name\]' },
-    link: { type: 'link', selector: '> a', attribute: 'href' },
-    photo: { type: 'link', selector: 'img', attribute: 'src' },
   },
 };
+
 
 describe('Scrapes a URL based on JSON configuration', () => {
   it('validates a JSON contract', () => {
@@ -94,5 +92,25 @@ describe('Scrapes a URL based on JSON configuration', () => {
       JSON.stringify(scraper.getProvider(page, attributes)),
       JSON.stringify(new HTMLProvider(page, contract, attributes)),
     );
+  });
+
+  it('returns scraped data from a url', () => {
+    const scraper = new Scraper('http://leboncoin.com', contract);
+    const expectedData = [{ name: 'House listing', price: 375000 }];
+
+    class ProviderStub {
+      getScrapedItems() {
+        return expectedData;
+      }
+    }
+
+    scraper.getProvider = sinon.stub().returns(new ProviderStub());
+
+    return scraper.getDataFromPage().then((data) => {
+      assert.equal(
+        JSON.stringify(data),
+        JSON.stringify(expectedData),
+      );
+    }).catch((error) => { throw error; });
   });
 });
