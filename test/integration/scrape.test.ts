@@ -1,6 +1,6 @@
 import Scraper from '../../index';
 import * as assert from 'assert';
-import { Page } from '../../src/fetcher/fetcher';
+import { ScrapedPage } from '../../src/fetcher/fetcher';
 import * as sinon from 'sinon';
 
 const url = 'http://characters.com';
@@ -31,7 +31,7 @@ const contents = `
   </html>
 `;
 
-const page: Page = {
+const page: ScrapedPage = {
   contents,
   url,
   encoding: 'en-US',
@@ -45,8 +45,12 @@ const contract = {
     photo: { type: 'background-image', selector: '[data-profile]', attribute: 'style' },
     link: { type: 'link', selector: 'a', attribute: 'href' },
     price: { type: 'price', selector: '[data-price]', data: { name: 'price', key: 'amount' } },
+    currency: { type: 'price', selector: '[any-price]', data: { name: 'price', key: 'currency' } },
+    country: { type: 'price', selector: '[any-price]', data: { name: 'country' } },
+    city: { type: 'text', selector: 'description', attribute: 'city' },
     size: { type: 'size', selector: '[data-size]', attribute: 'data-size' },
     description: { type: 'text', selector: '.description' },
+    fullText: { type: 'text' },
   },
 };
 
@@ -56,16 +60,22 @@ const expectedData = [
     photo: 'http://images.com/jonsnow',
     link: 'http://characters.com/jonsnow',
     price: 243,
+    currency: null,
+    city: null,
     size: 56,
     description: 'A cool dude',
+    fullText: 'Jon Snow\n          \n          23423\n          123\n           A cool dude',
   },
   {
     name: 'Ned Stark',
     photo: 'http://images.com/nedstark',
     link: 'http://characters.com/nedstark',
     price: 14234,
+    currency: null,
+    city: null,
     size: 5536,
     description: 'Dies a lot',
+    fullText: 'Ned Stark\n          \n          23423\n          43543\n          Dies a lot',
   },
 ];
 

@@ -1,5 +1,5 @@
 import Fetcher from './fetcher';
-import { Page } from '../fetcher/fetcher';
+import { ScrapedPage } from '../fetcher/fetcher';
 
 export default class PuppeteerFetcher implements Fetcher {
   private url: string;
@@ -8,9 +8,9 @@ export default class PuppeteerFetcher implements Fetcher {
     this.url = url;
   }
 
-  getPage(): Promise<Page> {
+  getPage(): Promise<ScrapedPage> {
     return new Promise((resolve, reject) => {
-      const page: Page = {
+      const page: ScrapedPage = {
         encoding: '',
         contents: '',
         url: this.url,

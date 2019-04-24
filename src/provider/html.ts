@@ -1,9 +1,9 @@
 import { Provider } from './provider';
-import { Page } from '../fetcher/fetcher';
+import { ScrapedPage } from '../fetcher/fetcher';
 import * as cheerio from 'cheerio';
 
 export default class HTMLProvider implements Provider {
-  private page: Page;
+  private page: ScrapedPage;
   private contract: any;
   private attributes: any;
   private $: CheerioStatic;

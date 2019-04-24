@@ -2,7 +2,7 @@ import * as assert from 'assert';
 import Scraper from '../../index';
 import PuppeteerFetcher from '../../src/fetcher/puppeteer';
 import RequestFetcher from '../../src/fetcher/request';
-import { Page } from '../../src/fetcher/fetcher';
+import { ScrapedPage } from '../../src/fetcher/fetcher';
 import HTMLProvider from '../../src/provider/html';
 import * as sinon from 'sinon';
 
@@ -85,7 +85,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
   it('gets the html provider', () => {
     const url = 'https://google.com';
     const scraper = new Scraper(url, contract);
-    const page: Page = {
+    const page: ScrapedPage = {
       url,
       contents: '',
       encoding: 'fr-FR',

@@ -5,7 +5,7 @@ import * as Iconv from 'iconv';
 function getCharsetFromContentType(contentType: string) {
   const regex = /(?<=charset=)[^;]*/gm;
   const charset = regex.exec(contentType);
-  return charset;
+  return charset[0];
 }
 
 function getContentTypeFromHTML(contents: string) {

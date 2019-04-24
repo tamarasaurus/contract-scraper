@@ -6,7 +6,7 @@ import Text from './src/attribute/text';
 
 import PuppeteerFetcher from './src/fetcher/puppeteer';
 import RequestFetcher from './src/fetcher/request';
-import Fetcher, { Page } from './src/fetcher/fetcher';
+import Fetcher, { ScrapedPage } from './src/fetcher/fetcher';
 import { Provider } from './src/provider/provider';
 import HTMLProvider from './src/provider/html';
 
@@ -45,12 +45,12 @@ class Scraper {
     const attributes = this.getAttributes();
     const fetcher = this.getFetcher(this.contract.scrapeAfterLoading);
 
-    return fetcher.getPage().then((page: Page) => {
+    return fetcher.getPage().then((page: ScrapedPage) => {
       return this.getScrapedItems(page, attributes);
     });
   }
 
-  public getScrapedItems(page: Page, attributes: any) {
+  public getScrapedItems(page: ScrapedPage, attributes: any) {
     return this.getProvider(page, attributes).getScrapedItems();
   }
 
@@ -80,7 +80,7 @@ class Scraper {
     return new RequestFetcher(this.url);
   }
 
-  public getProvider(page: Page, attributes: any): Provider {
+  public getProvider(page: ScrapedPage, attributes: any): Provider {
     return new HTMLProvider(page, this.contract, attributes);
   }
 }
