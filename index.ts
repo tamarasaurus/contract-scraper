@@ -1,16 +1,21 @@
-import { Attribute } from './src/attribute/attribute';
 import BackgroundImage from './src/attribute/background-image';
 import Link from './src/attribute/link';
 import Price from './src/attribute/price';
 import Size from './src/attribute/size';
 import Text from './src/attribute/text';
 
+import PuppeteerFetcher from './src/fetcher/puppeteer';
+import RequestFetcher from './src/fetcher/request';
+import Fetcher, { Page } from './src/fetcher/fetcher';
+import { Provider } from './src/provider/provider';
+import HTMLProvider from './src/provider/html';
+
 interface Attributes {
   [name: string]: any;
 }
 
 class Scraper {
-  public defaultAttributeTypes: any = {
+  public defaultAttributes: any = {
     backgroundImage: BackgroundImage,
     link: Link,
     price: Price,
@@ -22,55 +27,57 @@ class Scraper {
   private contract: any;
   private attributes: Attributes;
 
-  constructor (url: string, contract: any, attributes: Attributes = {}) {
+  constructor(url: string, contract: any, attributes: Attributes = {}) {
     this.url = url;
     this.contract = contract;
     this.attributes = attributes;
   }
 
-  public scrape(): Promise<[]> {
-    if (!this.validateContract(this.contract)) {
+  public getDataFromPage(): Promise<[]> {
+    if (!this.contractIsValid()) {
       throw Error('Your contract is invalid, please check the specifications');
     }
 
-    const getAttributeTypes = this.getAttributeTypes();
+    if (!this.urlIsValid()) {
+      throw Error(`The URL "${this.url}" you have provided is invalid`);
+    }
 
-    return new Promise((resolve, reject) => {
-      return [
-        {
-          description: 'Description',
-          link: 'http://link.com/123',
-          name: 'Name',
-          photo: 'http://image.com/jpeg',
-          price: 3123,
-          size: 12,
-        },
-      ];
+    const attributes = this.getAttributes();
+    const fetcher = this.getFetcher(this.contract.scrapeAfterLoading);
+
+    return fetcher.getPage().then((page: Page) => {
+      const provider = this.getProvider(page, attributes);
+
+      return provider.getScrapedItems();
     });
   }
 
-  public getAttributeTypes(): { [name: string]: any } {
-    return Object.assign(this.defaultAttributeTypes, this.attributes);
+  public getAttributes(): { [name: string]: any } {
+    return Object.assign(this.defaultAttributes, this.attributes);
   }
 
-  public validateContract(contract: any) {
-    return !(contract === null || contract === undefined);
+  public urlIsValid() {
+    try {
+      new URL(this.url);
+    } catch (e) {
+      return false;
+    }
   }
 
-  public fetchPageContents(): Promise<string> {
-    return new Promise((resolve, reject) => 'contents');
+  public contractIsValid() {
+    return !(this.contract === null || this.contract === undefined);
   }
 
-  public getFetcher(fetcher: string = 'request') {
+  public getFetcher(scrapeAfterLoading: boolean = false): Fetcher {
+    if (scrapeAfterLoading) {
+      return new PuppeteerFetcher(this.url);
+    }
 
+    return new RequestFetcher(this.url);
   }
 
-  public getProvider(provider: string = 'html') {
-
-  }
-
-  public provideScrapedItemsFromPageContents(pageContents: string) {
-
+  public getProvider(page: Page, attributes: any): Provider {
+    return new HTMLProvider(page, this.contract, attributes);
   }
 }
 

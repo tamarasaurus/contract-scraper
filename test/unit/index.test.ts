@@ -1,10 +1,14 @@
 import * as assert from 'assert';
 import Scraper from '../../index';
+import PuppeteerFetcher from '../../src/fetcher/puppeteer';
+import RequestFetcher from '../../src/fetcher/request';
+import { Page } from '../../src/fetcher/fetcher';
+import HTMLProvider from '../../src/provider/html';
 
 const contract = {
   itemSelector: 'li[itemtype=\http://schema.org/Offer\]',
   pageQuery: 'page',
-  load: true,
+  scrapeAfterLoading: true,
   attributes: {
     name: { type: 'text', selector: '[itemprop=\name\]' },
     price: { type: 'price', selector: '[itemprop=\price\]' },
@@ -15,12 +19,6 @@ const contract = {
   },
 };
 
-function Special(inputValue: string) {
-  this.value = inputValue;
-
-  return this.value;
-}
-
 describe('Scrapes a URL based on JSON configuration', () => {
   it('validates a JSON contract', () => {
     const scraper = new Scraper(
@@ -29,38 +27,72 @@ describe('Scrapes a URL based on JSON configuration', () => {
     );
 
     assert.throws(
-      () => scraper.scrape(),
+      () => scraper.getDataFromPage(),
       new Error('Your contract is invalid, please check the specifications'),
     );
   });
 
+  it('validates a url', () => {
+    const scraper = new Scraper('an invalid url', {});
+
+    assert.throws(
+      () => scraper.getDataFromPage(),
+      new Error('The URL "an invalid url" you have provided is invalid'),
+    );
+  });
+
   it('merges custom attribute types from the user', () => {
-    const customAttributeTypes =  {
-      special: Special,
-    };
+    function Special(inputValue: string) {
+      this.value = inputValue;
 
-    const defaultAttributeTypes = {
-      name: () => 'test',
-    };
+      return this.value;
+    }
 
-    const scrape = new Scraper(
+    const customAttributeTypes = { special: Special };
+    const defaultAttributeTypes = { name: () => 'test' };
+
+    const scraper = new Scraper(
       'https://www.leboncoin.fr/annonces/offres/pays_de_la_loire/',
       contract,
       customAttributeTypes,
     );
 
-    scrape.defaultAttributeTypes = defaultAttributeTypes;
+    scraper.defaultAttributes = defaultAttributeTypes;
 
     assert.equal(
-      scrape.getAttributeTypes(),
+      scraper.getAttributes(),
       Object.assign(defaultAttributeTypes, customAttributeTypes),
     );
   });
 
-  it('sets scraping options based on a valid JSON contract');
-  it('scrapes a URL and returns an array of scraped items');
-  it('decides which fetcher to use based on contract configuration');
-  it('decides which provider to use based on the request content type');
-  it('fetches HTML page contents as a string');
-  it('provides scraped items from page contents');
+  it('decides which fetcher to use based on the user configuration', () => {
+    const url = 'https://google.com';
+    const scraper = new Scraper(url, {});
+
+    assert.equal(
+      JSON.stringify(scraper.getFetcher(true)),
+      JSON.stringify(new PuppeteerFetcher(url)),
+    );
+
+    assert.equal(
+      JSON.stringify(scraper.getFetcher(false)),
+      JSON.stringify(new RequestFetcher(url))
+    );
+  });
+
+  it('gets the html provider', () => {
+    const url = 'https://google.com';
+    const scraper = new Scraper(url, contract);
+    const page: Page = {
+      contents: '',
+      encoding: 'fr-FR',
+    };
+
+    const attributes = scraper.getAttributes();
+
+    assert.equal(
+      JSON.stringify(scraper.getProvider(page, attributes)),
+      JSON.stringify(new HTMLProvider(page, contract, attributes)),
+    );
+  });
 });
