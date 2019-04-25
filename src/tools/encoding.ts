@@ -5,6 +5,9 @@ import * as Iconv from 'iconv';
 function getCharsetFromContentType(contentType: string) {
   const regex = /(?<=charset=)[^;]*/gm;
   const charset = regex.exec(contentType);
+
+  if (charset === null) return;
+
   return charset[0];
 }
 
