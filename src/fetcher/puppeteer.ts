@@ -1,5 +1,8 @@
 import Fetcher from './fetcher';
 import { ScrapedPage } from '../fetcher/fetcher';
+import randomUserAgent from 'random-useragent';
+import * as puppeteer from 'puppeteer';
+import { getContentTypeHeaders, guessEncoding } from '../tools/encoding';
 
 export default class PuppeteerFetcher implements Fetcher {
   private url: string;
@@ -8,15 +11,46 @@ export default class PuppeteerFetcher implements Fetcher {
     this.url = url;
   }
 
-  getPage(): Promise<ScrapedPage> {
-    return new Promise((resolve, reject) => {
-      const page: ScrapedPage = {
-        encoding: '',
-        contents: '',
-        url: this.url,
-      };
+  public getBrowserType() {
+    return puppeteer;
+  }
 
-      resolve(page);
+  public async setupBrowser(): Promise<{ response: puppeteer.Response, contents: string }> {
+    const browserType = this.getBrowserType();
+    const userAgent = randomUserAgent.getRandom();
+    const browser = await browserType.launch({
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--allow-insecure'],
+      ignoreHTTPSErrors: true,
     });
+
+    const page = await browser.newPage();
+    await page.setUserAgent(userAgent);
+    await page.setExtraHTTPHeaders({
+      'Content-Type': 'text/html; charset=utf-8',
+      'Accept': 'text/html',
+      'Accept-Language': 'fr-FR',
+    });
+
+    await page.setViewport({ width: 1280, height: 1000 });
+    const response = await page.goto(this.url);
+    const contents = await page.content();
+
+    await page.close();
+    await browser.close();
+
+    return { response, contents };
+  }
+
+  async getPage(): Promise<ScrapedPage> {
+    const { response, contents } = await this.setupBrowser();
+
+    const contentType = getContentTypeHeaders(await response.headers());
+
+    return {
+      contents,
+      encoding: guessEncoding(contentType, contents),
+      url: this.url,
+    };
   }
 }

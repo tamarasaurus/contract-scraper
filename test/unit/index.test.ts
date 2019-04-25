@@ -109,6 +109,25 @@ describe('Scrapes a URL based on JSON configuration', () => {
       }
     }
 
+    class FakeFetcher {
+      private url: string;
+
+      constructor(url: string) {
+        this.url = url;
+      }
+
+      getPage() {
+        return new Promise((resolve) => {
+          return resolve({
+            contents: '<html></html>',
+            encoding: 'utf-8',
+            url: 'http://leboncoin.com',
+          });
+        });
+      }
+    }
+
+    scraper.getFetcher = sinon.stub().returns(new FakeFetcher('http://leboncoin.com'));
     scraper.getProvider = sinon.stub().returns(new ProviderStub());
 
     return scraper.scrapePage().then((data) => {

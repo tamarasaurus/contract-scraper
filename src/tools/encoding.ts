@@ -13,6 +13,10 @@ function getContentTypeFromHTML(contents: string) {
   return $('meta[charset]').attr('charset');
 }
 
+export function getContentTypeHeaders(headers: any) {
+  return headers['content-type'] || headers['Content-type'] || headers['Content-Type'];
+}
+
 export function encodePageContents(encoding: string, contents: string) {
   const lib: any = Iconv;
   const converter: any = lib['Iconv'];
