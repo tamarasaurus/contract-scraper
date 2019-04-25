@@ -88,7 +88,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
     const page: ScrapedPage = {
       url,
       contents: '',
-      encoding: 'fr-FR',
+      encoding: 'utf-8',
     };
 
     const attributes = scraper.getAttributes();
