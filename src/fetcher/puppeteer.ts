@@ -1,7 +1,7 @@
 import Fetcher from './fetcher';
 import { ScrapedPage } from '../fetcher/fetcher';
 import randomUserAgent from 'random-useragent';
-import * as puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer';
 import { getContentTypeHeaders, guessEncoding } from '../tools/encoding';
 
 export default class PuppeteerFetcher implements Fetcher {
