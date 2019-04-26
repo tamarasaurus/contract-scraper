@@ -56,7 +56,12 @@ export default class HTMLProvider implements Provider {
       return this.getElementDataAttributeKeyValue(element, data);
     }
 
-    const AttributeType = this.attributes[type.toLowerCase()];
+    const AttributeType = this.attributes[type];
+
+    if (AttributeType === undefined) {
+      throw Error(`The attribute type ${type} isn't defined, did you pass it to the scraper?`);
+    }
+
     const scrapedAttribute = new AttributeType(value, this.page.url);
 
     return scrapedAttribute.value;
