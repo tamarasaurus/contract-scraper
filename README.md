@@ -37,9 +37,9 @@ Let's say that you want to scrape data about a list of toys from this HTML page:
 ```
 
 You have the following properties that you can collect:
-- Link `a[href]`
 - Name `.name`
 - Photo URL `[data-profile]`
+- Link `a[href]`
 
 So you can construct a contract with the following properties:
 
@@ -86,7 +86,27 @@ import Scraper from 'contract-scraper'
 
 const scraper = new Scraper(
   'http://characters.com',
+  contract
 )
+
+scraper.scrapePage().then((items) => {
+  console.log(items);
+  // [
+  //   {
+  //     name: 'Jon Snow',
+  //     photo: 'http://images.com/jonsnow',
+  //     link: 'http://characters.com/jonsnow'
+  //   },
+  //   {
+  //     name: 'Ned Stark',
+  //     photo: 'http://images.com/nedstark',
+  //     link: 'http://characters.com/nedstark'
+  //   }
+  // ]
+})
 
 ```
 
+## Attributes
+
+## Custom attributes
