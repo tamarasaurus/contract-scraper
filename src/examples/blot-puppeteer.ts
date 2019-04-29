@@ -21,4 +21,4 @@ const scraper = new Scraper(
 
 scraper.scrapePage().then((data) => {
   console.log(data);
-});
+})

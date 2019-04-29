@@ -25,21 +25,32 @@ export default class PuppeteerFetcher implements Fetcher {
     });
 
     const page = await browser.newPage();
-    await page.setUserAgent(userAgent);
-    await page.setExtraHTTPHeaders({
-      'Content-Type': 'text/html; charset=utf-8',
-      'Accept': 'text/html',
-      'Accept-Language': 'fr-FR',
-    });
 
-    await page.setViewport({ width: 1280, height: 1000 });
-    const response = await page.goto(this.url);
-    const contents = await page.content();
+    try {
+      await page.setUserAgent(userAgent);
+      await page.setExtraHTTPHeaders({
+        'Content-Type': 'text/html; charset=utf-8',
+        'Accept': 'text/html',
+        'Accept-Language': 'fr-FR',
+      });
 
-    await page.close();
-    await browser.close();
+      await page.setViewport({ width: 1280, height: 1000 });
 
-    return { response, contents };
+      const response = await page.goto(this.url);
+      const contents = await page.content();
+
+      await page.close();
+      await browser.close();
+
+      return { response, contents };
+    } catch (e) {
+      await page.close();
+      await browser.close();
+
+      console.log(`Error fetching ${this.url} with puppeteer`);
+      throw e;
+    }
+
   }
 
   async getPage(): Promise<ScrapedPage> {
