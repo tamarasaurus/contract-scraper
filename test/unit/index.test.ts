@@ -12,7 +12,7 @@ const contract = {
   scrapeAfterLoading: true,
   attributes: {
     name: { type: 'text', selector: '[itemprop=\name\]' },
-    price: { type: 'price', selector: '[itemprop=\price\]' },
+    price: { type: 'digit', selector: '[itemprop=\price\]' },
   },
 };
 
