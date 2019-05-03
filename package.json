@@ -1,6 +1,6 @@
 {
   "name": "contract-scraper",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A customisable data scraper for the web based on JSON contracts",
   "main": "dist/index",
   "typings": "dist/index",
