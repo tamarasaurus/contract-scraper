@@ -1,9 +1,8 @@
 # contract-scraper
 
-This package lets you scrape a HTML page and easily return the data in a structure that you define (a contract).
+With contract-scraper you can easily scrape a HTML page and return the data in a structured format.
 
 [![Build Status](https://travis-ci.org/tamarasaurus/contract-scraper.svg?branch=master)](https://travis-ci.org/tamarasaurus/contract-scraper)
-
 
 ## Installation
 
@@ -11,102 +10,202 @@ This package lets you scrape a HTML page and easily return the data in a structu
 npm install contract-scraper --save
 ```
 
-
 ## Usage
 
-Let's say that you want to scrape data about a list of toys from this HTML page:
-
-```html
-<html>
-    <head>
-      <title>Game of Thrones Action Figures</title>
-    </head>
-    <body>
-      <ul>
-        <li>
-          <a href="http://characters.com/jonsnow" class="name">Jon Snow</a>
-          <div data-profile style="background:red;background-image:url('http://images.com/jonsnow')">
-        </li>
-        <li>
-          <a href="http://characters.com/nedstark" class="name">Ned Stark</a>
-          <div data-profile style="background:red;background-image:url('http://images.com/nedstark')">
-        </li>
-      </ul>
-    </body>
-  </html>
-```
-
-You have the following properties that you can collect:
-- Name `.name`
-- Photo URL `[data-profile]`
-- Link `a[href]`
-
-So you can construct a contract with the following properties:
+To scrape a page, you can create a new instance of `contract-scraper` with these parameters:
 
 ```javascript
-const contract = {
-  // The selector of the list item
-  itemSelector: 'ul li',
-
-  // Option to scrape with a headless browser
+let contract = {
+  itemSelector: 'li',
   scrapeAfterLoading: false,
   attributes: {
     name: {
       type: 'text',
       selector: '.name'
     },
-    photo: {
-      type: 'background-image',
-      selector: '[data-profile]',
-      attribute: 'style'
-    },
     link: {
       type: 'link',
       selector: 'a',
       attribute: 'href'
     }
-  },
-};
+  }
+}
+
+const scraper = new Scraper('http://website.com', contract)
 ```
 
-For each attribute that you want to scrape, you have the following options:
+A contract accepts the following properties:
 
-| Property             	| Options                                                                                                                                          	| Description                                                                                                                                                              	|
-|----------------------	|--------------------------------------------------------------------------------------------------------------------------------------------------	|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------	|
-| name                 	| 'text',  'background-image', 'price', 'size', 'link'                                                                                          	| Each attribute type is able to scrape data from a HTML element differently. See here for more: Attributes                                                                                                                                                                        	|
-| selector             	| '.class'                                                                                                                                         	| Any jQuery/DOM selector that is compatible with https://github.com/cheeriojs/cheerio                                                                                     	|
-| attribute (optional) 	| 'href'                                                                                                                                           	| You can use any HTML attribute that exists on the element that you want to scrape                                                                                        	|
-| data (optional)      	| data: { name: 'country' } <div data-name="country">Country</div>  OR  data: {name: 'price', key: 'currency'} <div data-price="{currency: 'aud'}" 	| For a string, you can simply specify the name of the data attribute to scrape the contents. Otherwise you can specify the key if the data attribute contains some JSON.  	|
+### `itemSelector` (string)
 
+  A CSS selector for the element to be scraped. The scraper will process all the elements matching this selector.
 
-Once you have your contract ready, you can pass it to the scraper with a url:
+### `scrapeAfterLoading` (boolean = false)
 
-```typescript
-import Scraper from 'contract-scraper'
+  Setting `true` will use `puppeteer` to fully load the URL, otherwise the scraper will use `request` to simply request the static HTML of the page. Puppeteer can be useful when the page uses lazy loading for images or other content.
+
+### `attributes` (object)
+
+Defines the data to scrape for each item.
+
+Each attribute matches a HTML element to scrape. The attribute type will define how data wil be extracted from the element, and how the data should be formatted in the final output. For example you can use one of the in-built types to extract a number from an element:
+
+```html
+<ul>
+  <li>
+    <div class="name">Iron man</div>
+    <div class="price">100 euros</div>
+  </li>
+  <li>
+    <div class="name">Captain America</div>
+    <div class="price">500 euros</div>
+  </li>
+<ul>
+```
+
+```javascript
+const contract = {
+  itemSelector: 'li',
+  scrapeAfterLoading: false,
+  attributes: {
+    name: {
+      type: 'text',
+      selector: '.name'
+    },
+    price: {
+      type: 'digit',
+      selector: '.price'
+    }
+  }
+}
 
 const scraper = new Scraper(
   'http://characters.com',
   contract
 )
 
-scraper.scrapePage().then((items) => {
-  console.log(items);
+scraper.scrapePage().then(items => {
+  console.log(items)
   // [
   //   {
-  //     name: 'Jon Snow',
-  //     photo: 'http://images.com/jonsnow',
-  //     link: 'http://characters.com/jonsnow'
+  //     name: 'Iron man',
+  //     price: 100
   //   },
-  //   {
-  //     name: 'Ned Stark',
-  //     photo: 'http://images.com/nedstark',
-  //     link: 'http://characters.com/nedstark'
+  //       {
+  //     name: 'Captain America',
+  //     price: 500
   //   }
   // ]
 })
 
 ```
 
-## Attributes
+Each attribute can have the following properties:
 
-## Custom attributes
+  * `name` (string) - A label for this attribute for the final output
+  * `selector` (string) - The CSS selector for the element (scoped to itemSelector).
+  * `type` (string) - A custom type, or one of the in-built ones that returns:
+    * `background-image`: A background-image url from a style string
+    * `link`: An absolute URL
+    * `digit`: A number
+    * `size`: A number for size in m².
+    * `text`: Inner text of the element
+  * `attribute (optional)` (string)
+
+    The name of the HTML attribute to scrape data from. E.g. for an element:
+    ```html
+      <a href="http://linktoscrape">Homepage</a>
+    ```
+    ```javascript
+      {
+        name: 'URL',
+        type: 'link',
+        selector: 'a',
+        attribute: 'href'
+      }
+    ```
+    By default the attribute type will use the innerText of the element if `attribute` is not specified.
+  * `data (optional)` (object) - If you want to scrape HTML data attributes you can do it in two ways:
+    * Directly scraping a data attribute:
+      ```html
+      <div data-country="Australia">
+      ```
+      ```javascript
+      {
+        name: 'Country',
+        type: 'text',
+        selector: 'data-country',
+        data: { name: 'country' }
+      }
+      ```
+      This will return "Australia" in your list of results.
+    * For scraping a JSON value inside a data attribute:
+      ```html
+      <div data-price="{currency: 'aud'}"></div>
+      ```
+      ```javascript
+      {
+        name: 'Price',
+        type: 'digit',
+        selector: 'data-price',
+        data: { name: 'price', key: 'currency'}
+      }
+      ````
+      This will return "aud" in your list of results.
+
+## Custom attributes types
+
+In addition to the in-built attribute types, you can provide your own when you create a new instance of the scraper. A custom attribute type needs to be a class or a function that has a `value` property. As a constructor argument it will receive the string innerText value from the matching element. Then you can format it however you like.
+
+For example if you wanted to extract a list of tags and format them as an array:
+
+```html
+<ul>
+  <li>
+    <div class="name">Australia</div>
+    <div class="tags">spiders,vegemite,scorching,heat</div>
+  </li>
+</ul>
+```
+
+```javascript
+import Scraper from 'contract-scraper';
+
+const contract = {
+  itemSelector: 'li',
+  scrapeAfterLoading: false,
+  attributes: {
+    countryName: {
+      type: 'text',
+      selector: '.name'
+    },
+    tags: {
+      type: 'list',
+      selector: '.tags'
+    }
+  }
+}
+
+function ListFromString(commaSeparatedString) {
+  this.value = commaSeparatedString.split(',');
+}
+
+const scraper = new Scraper(
+  'http://countries.com',
+  contract,
+  { 'list': ListFromString }
+)
+
+scraper.scrapePage().then(items => {
+  console.log(items);
+  // [
+  //   {
+  //     countryName: 'Australia',
+  //     tags: [ 'spiders', 'vegemite', 'scorching', 'heat' ]
+  //   }
+  // ]
+})
+
+```
+
+

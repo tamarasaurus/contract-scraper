@@ -1,6 +1,6 @@
 import BackgroundImage from './src/attribute/background-image';
 import Link from './src/attribute/link';
-import Price from './src/attribute/price';
+import Digit from './src/attribute/digit';
 import Size from './src/attribute/size';
 import Text from './src/attribute/text';
 
@@ -18,7 +18,7 @@ class Scraper {
   public defaultAttributes: any = {
     'background-image': BackgroundImage,
     link: Link,
-    price: Price,
+    digit: Digit,
     size: Size,
     text: Text,
   };

@@ -9,7 +9,7 @@ const contract = {
     'description': { 'type': 'text', 'selector': '.title_part2' },
     'size': { 'type': 'size', 'selector': '.chiffres_cles span:nth-child(2) strong' },
     'link': { 'type': 'link', 'selector': '.title_part1', 'attribute': 'href' },
-    'price': { 'type': 'price', 'selector': '.prix strong' },
+    'digit': { 'type': 'digit', 'selector': '.prix strong' },
     'photo': { 'type': 'link', 'selector': '.visuel img', 'attribute': 'src' },
   },
 };
