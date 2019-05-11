@@ -74,8 +74,21 @@ export default class HTMLProvider implements Provider {
     elements.forEach((element: CheerioElement) => {
       const scrapedItem = {};
 
-      Object.entries(this.contract.attributes).forEach(([name, options]) => {
-        scrapedItem[name] = this.mapElementToProperty(element, options);
+      Object.entries(this.contract.attributes).forEach(([name, options]: [string, any]) => {
+        if (options.itemSelector !== undefined) {
+          const childElements = this.$(options.itemSelector, element).toArray();
+          scrapedItem[name] = [];
+
+          childElements.forEach((childElement: CheerioElement) => {
+            const childValues = {};
+            Object.entries(options.attributes).forEach(([childName, childOptions]: [string, any]) => {
+              childValues[childName] = this.mapElementToProperty(childElement, childOptions);
+            });
+            scrapedItem[name].push(childValues);
+          });
+        } else {
+          scrapedItem[name] = this.mapElementToProperty(element, options);
+        }
       });
 
       scrapedItems.push(scrapedItem);
