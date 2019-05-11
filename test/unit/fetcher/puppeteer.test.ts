@@ -32,6 +32,12 @@ class FakePuppeteer {
   launch() {
     return new FakeBrowser();
   }
+  getContents() {
+    return {
+      response: '',
+      contents: '',
+    };
+  }
 }
 
 const puppeteerFetcher = new PuppeteerFetcher('http://leboncoin.com');
@@ -39,7 +45,8 @@ puppeteerFetcher.getBrowserType = sinon.stub().returns(new FakePuppeteer());
 
 describe('it fetches data from puppeteer', () => {
   it('sets up the browser', async () => {
-    const { response, contents } = await puppeteerFetcher.setupBrowser();
+    const { page, browser } = await puppeteerFetcher.setupBrowser();
+    const { response, contents } = await puppeteerFetcher.getContents(page, browser);
 
     assert.equal(
       JSON.stringify({ response, contents }, null, 2),

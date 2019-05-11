@@ -86,3 +86,9 @@ class Scraper {
 }
 
 export default Scraper;
+
+export {
+  PuppeteerFetcher,
+  RequestFetcher,
+  HTMLProvider,
+};
