@@ -153,6 +153,52 @@ Each attribute can have the following properties:
       ````
       This will return "aud" in your list of results.
 
+### Nested attributes
+
+It's also possible to scrape nested attributes, like a list inside an item:
+
+```html
+<ul class="friends">
+  <li>
+    <span>Spiderman</span>
+    <ul>
+      <li><strong>Iron</strong><em>Man</em></li>
+      <li><strong>Captain</strong><em>America</em></li>
+    </ul>
+  </li>
+</ul>
+```
+
+The contract:
+```json
+{
+  "itemSelector": ".friends li",
+  "attributes": {
+    "name": { "type": "text", "selector": "span" },
+    "friends": {
+      "itemSelector": "ul li",
+      "attributes": {
+        "firstName": { "type": "text", "selector": "strong" },
+        "lastName": { "type": "text", "selector": "em" }
+      }
+    }
+  }
+}
+```
+
+So this will return all the `friends` as an array (using any type):
+```javascript
+[
+  {
+    name: 'Spiderman',
+    friends: [
+      { firstName: 'Iron', lastName: 'Man' },
+      { firstName: 'Captain', lastName: 'America' },
+    ]
+  }
+]
+```
+
 ## Custom attributes types
 
 In addition to the in-built attribute types, you can provide your own when you create a new instance of the scraper. A custom attribute type needs to be a class or a function that has a `value` property. As a constructor argument it will receive the string innerText value from the matching element. Then you can format it however you like.
