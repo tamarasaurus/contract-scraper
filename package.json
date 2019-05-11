@@ -37,7 +37,7 @@
   },
   "scripts": {
     "test": "rm -rf coverage && nyc mocha",
-    "prepublishOnly": "npm run compile",
+    "prepare": "npm run compile",
     "compile": "tsc -p .",
     "clean": "rm -rf dist",
     "watch": "tsc -w -p .",
