@@ -20,7 +20,7 @@ export default class PuppeteerFetcher implements Fetcher {
     const userAgent = randomUserAgent.getRandom();
     const browser = await browserType.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--allow-insecure'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox', '--allow-insecure', '--disable-web-security'],
       ignoreHTTPSErrors: true,
     });
 
