@@ -2,6 +2,7 @@ import * as assert from 'assert';
 import BackgroundImage from '../../../src/attribute/background-image';
 
 const rootUrl = 'http://website.com/';
+const rootUrlWithPath = 'http://website.com/whatever/more/stuff';
 const imageUrl = 'http://website.com/images/whatever.jpeg';
 
 describe('creates a background image attribute', () => {
@@ -15,6 +16,12 @@ describe('creates a background image attribute', () => {
   it('extracts a relative url from a style tag', () => {
     const relativeUrl = `color:red;background-image:url('../images/whatever.jpeg')`;
     const image = new BackgroundImage(relativeUrl, rootUrl);
+    assert.equal(image.value, imageUrl);
+  });
+
+  it('extracts a relative url from a style tag and returns the root', () => {
+    const relativeUrl = `color:red;background-image:url('/images/whatever.jpeg')`;
+    const image = new BackgroundImage(relativeUrl, rootUrlWithPath);
     assert.equal(image.value, imageUrl);
   });
 
