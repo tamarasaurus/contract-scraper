@@ -1,5 +1,6 @@
-import * as path from 'path';
+import * as url from 'url';
 import { Attribute } from './attribute';
+import isRelativeUrl from 'is-relative-url';
 
 export default class BackgroundImage implements Attribute {
   private inputValue: [string, string];
@@ -19,22 +20,18 @@ export default class BackgroundImage implements Attribute {
     }
 
     try {
-      const url = new URL(root);
+      const base = new URL(root);
       const image = /(background-image:\s?url\((.*)?)\)/.exec(style);
       const match = image[2].replace(/'|"/g, '');
 
-      if (this.urlIsAbsolute(match)) {
-        return `${root}${path.join(url.host, match)}`;
+      if (isRelativeUrl(match)) {
+        return url.resolve(base.origin, match);
       }
 
       return match;
     } catch (e) {
       return null;
     }
-  }
-
-  private urlIsAbsolute(url: string): boolean {
-    return !url.startsWith('http') && !url.startsWith('www');
   }
 
   private isEmpty(style: string): boolean {
