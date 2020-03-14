@@ -42,7 +42,7 @@ export default class ScriptTagProvider implements Provider {
 
   getScrapedItems(): any[] {
     const scrapedItems = [];
-    const itemArray = get(this.contents, this.contract.itemSelector);
+    const itemArray = get(this.contents, this.contract.itemSelector) || [this.contents];
 
     itemArray.forEach((item: any) => {
       const scrapedItem = {};
