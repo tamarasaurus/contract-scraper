@@ -49,7 +49,7 @@ const contents = `
               ],
               "photo": "http://images.com/jonsnow",
               "price": {
-                "amount": 12345
+                "amount": "12345 dollars"
               }
             },
             {
@@ -61,7 +61,7 @@ const contents = `
               ],
               "photo": "http://images.com/nedstark",
               "price": {
-                "amount": 6789
+                "amount": "6789 eur"
               }
             }
           ]
@@ -207,7 +207,6 @@ it('scrapes a json schema script tag for a url and contract', () => {
   scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
 
   return scraper.scrapePage().then((data) => {
-    console.log('scraped data', data)
     assert.equal(
       JSON.stringify(expectedData, null, 2),
       JSON.stringify(data, null, 2),
