@@ -99,9 +99,9 @@ it('returns scraped data for a url and contract', () => {
       name: { type: 'text', selector: '.name' },
       photo: { type: 'background-image', selector: '[data-profile]', attribute: 'style' },
       link: { type: 'link', selector: 'a', attribute: 'href' },
-      price: { type: 'price', selector: '[data-price]', data: { name: 'price', key: 'amount' } },
-      currency: { type: 'price', selector: '[any-price]', data: { name: 'price', key: 'currency' } },
-      country: { type: 'price', selector: '[any-price]', data: { name: 'country' } },
+      price: { type: 'digit', selector: '[data-price]', data: { name: 'price', key: 'amount' } },
+      currency: { type: 'digit', selector: '[any-price]', data: { name: 'price', key: 'currency' } },
+      country: { type: 'digit', selector: '[any-price]', data: { name: 'country' } },
       city: { type: 'text', selector: 'description', attribute: 'city' },
       size: { type: 'size', selector: '[data-size]', attribute: 'data-size' },
       description: { type: 'text', selector: '.description' },
@@ -175,8 +175,8 @@ it('scrapes a json schema script tag for a url and contract', () => {
           lastName: { type: 'text', selector: 'lastName' }
         }
       },
-      photo: { type: 'link', selector: 'a', attribute: 'href' },
-      price: { type: 'price', selector: 'price.amount' },
+      photo: { type: 'link', selector: 'photo' },
+      price: { type: 'digit', selector: 'price.amount' },
     },
   };
 
@@ -190,9 +190,7 @@ it('scrapes a json schema script tag for a url and contract', () => {
         { firstName: "Arya", lastName: "Stark" },
       ],
       "photo": "http://images.com/jonsnow",
-      "price": {
-        "amount": 12345
-      }
+      "price": 12345,
     },
     {
       "name": "Ned Stark",
@@ -202,9 +200,7 @@ it('scrapes a json schema script tag for a url and contract', () => {
         { firstName: "Little", lastName: "finger" },
       ],
       "photo": "http://images.com/nedstark",
-      "price": {
-        "amount": 6789
-      }
+      "price": 6789,
     }
   ]
 

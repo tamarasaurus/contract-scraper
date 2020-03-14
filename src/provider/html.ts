@@ -53,6 +53,7 @@ export default class HTMLProvider implements Provider {
     const value = this.getElementValue(element, attribute);
 
     if (data !== undefined) {
+      // TODO parse by attribute type
       return this.getElementDataAttributeKeyValue(element, data);
     }
 

@@ -16,7 +16,7 @@ export default class Digit implements Attribute {
       return null;
     }
 
-    const strippedString = digit.replace(/\s+/g, '');
+    const strippedString = digit.toString().replace(/\s+/g, '');
     const getValue = /\d+/gm;
     const parsedString = strippedString.match(getValue);
 
