@@ -37,6 +37,36 @@ const contents = `
           </ul>
         </li>
       </ul>
+      <script type="application/json" id="schema-org">
+        {
+          "characters": [
+            {
+              "name": "Jon Snow",
+              "friends": [
+                { "firstName": "Sansa", "lastName": "Stark" },
+                { "firstName": "Bran", "lastName": "Stark" },
+                { "firstName": "Arya", "lastName": "Stark" }
+              ],
+              "photo": "http://images.com/jonsnow",
+              "price": {
+                "amount": 12345
+              }
+            },
+            {
+              "name": "Ned Stark",
+              "friends": [
+                { "firstName": "Sansa", "lastName": "Stark" },
+                { "firstName": "Bobby", "lastName": "B" },
+                { "firstName": "Little", "lastName": "finger" }
+              ],
+              "photo": "http://images.com/nedstark",
+              "price": {
+                "amount": 6789
+              }
+            }
+          ]
+        }
+      </script>
     </body>
   </html>
 `;
@@ -46,65 +76,6 @@ const page: ScrapedPage = {
   url,
   encoding: 'en-US',
 };
-
-const contract = {
-  itemSelector: 'body > ul > li',
-  scrapeAfterLoading: false,
-  attributes: {
-    name: { type: 'text', selector: '.name' },
-    photo: { type: 'background-image', selector: '[data-profile]', attribute: 'style' },
-    link: { type: 'link', selector: 'a', attribute: 'href' },
-    price: { type: 'price', selector: '[data-price]', data: { name: 'price', key: 'amount' } },
-    currency: { type: 'price', selector: '[any-price]', data: { name: 'price', key: 'currency' } },
-    country: { type: 'price', selector: '[any-price]', data: { name: 'country' } },
-    city: { type: 'text', selector: 'description', attribute: 'city' },
-    size: { type: 'size', selector: '[data-size]', attribute: 'data-size' },
-    description: { type: 'text', selector: '.description' },
-    fullText: { type: 'text' },
-    friends: {
-      itemSelector: 'ul li',
-      attributes: {
-        firstName: { type: 'text', selector: 'em' },
-        lastName: { type: 'text', selector: 'strong' }
-      },
-    },
-  },
-};
-
-const expectedData = [
-  {
-    name: 'Jon Snow',
-    photo: 'http://images.com/jonsnow',
-    link: 'http://characters.com/jonsnow',
-    price: 243,
-    currency: null,
-    city: null,
-    size: 56,
-    description: 'A cool dude',
-    fullText: 'Jon Snow\n          \n          23423\n          123\n           A cool dude \n          \n            StarkSansa\n            StarkBran\n            StarkArya',
-    friends: [
-      { firstName: 'Sansa', lastName: 'Stark' },
-      { firstName: 'Bran', lastName: 'Stark' },
-      { firstName: 'Arya', lastName: 'Stark' },
-    ],
-  },
-  {
-    name: 'Ned Stark',
-    photo: 'http://images.com/nedstark',
-    link: 'http://characters.com/nedstark',
-    price: 14234,
-    currency: null,
-    city: null,
-    size: 5536,
-    description: 'Dies a lot',
-    fullText: 'Ned Stark\n          \n          23423\n          43543\n          Dies a lot \n          \n            StarkSansa\n            BBobby\n            fingerLittle',
-    friends: [
-      { firstName: 'Sansa', lastName: 'Stark' },
-      { firstName: 'Bobby', lastName: 'B' },
-      { firstName: 'Little', lastName: 'finger' },
-    ],
-  },
-];
 
 class FakeFetcher {
   private url: string;
@@ -121,8 +92,67 @@ class FakeFetcher {
 }
 
 it('returns scraped data for a url and contract', () => {
+  const contract = {
+    itemSelector: 'body > ul > li',
+    scrapeAfterLoading: false,
+    attributes: {
+      name: { type: 'text', selector: '.name' },
+      photo: { type: 'background-image', selector: '[data-profile]', attribute: 'style' },
+      link: { type: 'link', selector: 'a', attribute: 'href' },
+      price: { type: 'price', selector: '[data-price]', data: { name: 'price', key: 'amount' } },
+      currency: { type: 'price', selector: '[any-price]', data: { name: 'price', key: 'currency' } },
+      country: { type: 'price', selector: '[any-price]', data: { name: 'country' } },
+      city: { type: 'text', selector: 'description', attribute: 'city' },
+      size: { type: 'size', selector: '[data-size]', attribute: 'data-size' },
+      description: { type: 'text', selector: '.description' },
+      fullText: { type: 'text' },
+      friends: {
+        itemSelector: 'ul li',
+        attributes: {
+          firstName: { type: 'text', selector: 'em' },
+          lastName: { type: 'text', selector: 'strong' }
+        },
+      },
+    },
+  };
+
   const scraper = new Scraper(url, contract);
   scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
+
+  const expectedData = [
+    {
+      name: 'Jon Snow',
+      photo: 'http://images.com/jonsnow',
+      link: 'http://characters.com/jonsnow',
+      price: 243,
+      currency: null,
+      city: null,
+      size: 56,
+      description: 'A cool dude',
+      fullText: 'Jon Snow\n          \n          23423\n          123\n           A cool dude \n          \n            StarkSansa\n            StarkBran\n            StarkArya',
+      friends: [
+        { firstName: 'Sansa', lastName: 'Stark' },
+        { firstName: 'Bran', lastName: 'Stark' },
+        { firstName: 'Arya', lastName: 'Stark' },
+      ],
+    },
+    {
+      name: 'Ned Stark',
+      photo: 'http://images.com/nedstark',
+      link: 'http://characters.com/nedstark',
+      price: 14234,
+      currency: null,
+      city: null,
+      size: 5536,
+      description: 'Dies a lot',
+      fullText: 'Ned Stark\n          \n          23423\n          43543\n          Dies a lot \n          \n            StarkSansa\n            BBobby\n            fingerLittle',
+      friends: [
+        { firstName: 'Sansa', lastName: 'Stark' },
+        { firstName: 'Bobby', lastName: 'B' },
+        { firstName: 'Little', lastName: 'finger' },
+      ],
+    },
+  ];
 
   return scraper.scrapePage().then((data) => {
     assert.equal(
@@ -131,3 +161,61 @@ it('returns scraped data for a url and contract', () => {
     );
   }).catch((error) => { throw error; });
 });
+
+it('scrapes a json schema script tag for a url and contract', () => {
+  const contract = {
+    scriptTagSelector: "#schema-org",
+    itemSelector: 'characters',
+    scrapeAfterLoading: false,
+    attributes: {
+      name: { type: 'text', selector: 'name' },
+      friends: {
+        itemSelector: 'friends', attributes: {
+          firstName: { type: 'text', selector: 'firstName' },
+          lastName: { type: 'text', selector: 'lastName' }
+        }
+      },
+      photo: { type: 'link', selector: 'a', attribute: 'href' },
+      price: { type: 'price', selector: 'price.amount' },
+    },
+  };
+
+  const scraper = new Scraper(url, contract);
+  const expectedData = [
+    {
+      "name": "Jon Snow",
+      "friends": [
+        { firstName: "Sansa", lastName: "Stark" },
+        { firstName: "Bran", lastName: "Stark" },
+        { firstName: "Arya", lastName: "Stark" },
+      ],
+      "photo": "http://images.com/jonsnow",
+      "price": {
+        "amount": 12345
+      }
+    },
+    {
+      "name": "Ned Stark",
+      "friends": [
+        { firstName: "Sansa", lastName: "Stark" },
+        { firstName: "Bobby", lastName: "B" },
+        { firstName: "Little", lastName: "finger" },
+      ],
+      "photo": "http://images.com/nedstark",
+      "price": {
+        "amount": 6789
+      }
+    }
+  ]
+
+  scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
+
+  return scraper.scrapePage().then((data) => {
+    console.log('scraped data', data)
+    assert.equal(
+      JSON.stringify(expectedData, null, 2),
+      JSON.stringify(data, null, 2),
+    );
+  }).catch((error) => { throw error; });
+
+})

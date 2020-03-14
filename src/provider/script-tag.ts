@@ -1,0 +1,111 @@
+import { Provider } from './provider';
+import { ScrapedPage } from '../fetcher/fetcher';
+import * as cheerio from 'cheerio';
+
+export default class ScriptTagProvider implements Provider {
+  private page: ScrapedPage;
+  private contract: any;
+  private attributes: any;
+  private $: CheerioStatic;
+
+  constructor(page, contract, attributes) {
+    this.page = page;
+    this.contract = contract;
+    this.attributes = attributes;
+    this.$ = cheerio.load(this.page.contents);
+  }
+
+  public getItemOrParentElement(item: CheerioElement, selector: string): Cheerio {
+    if (selector !== undefined) {
+      return this.$(selector, item);
+    }
+
+    return this.$(item);
+  }
+
+  public getElementValue(element: Cheerio, attribute: string): string {
+    if (attribute !== undefined) {
+      const value = this.$(element).attr(attribute);
+      return (value ? value.trim() : null);
+    }
+
+    return this.$(element).text().trim();
+  }
+
+  public getElementDataAttributeKeyValue(element: Cheerio, { name, key }): string | null {
+    const value = this.$(element).data(name);
+
+    if (name !== undefined && key !== undefined) {
+      try {
+        return value[key];
+      } catch (e) {
+        return null;
+      }
+    }
+
+    return value;
+  }
+
+  mapElementToProperty(item: CheerioElement, options: any) {
+    const { type, selector, attribute, data } = options;
+
+    const element = this.getItemOrParentElement(item, selector);
+    const value = this.getElementValue(element, attribute);
+
+    if (data !== undefined) {
+      return this.getElementDataAttributeKeyValue(element, data);
+    }
+
+    const AttributeType = this.attributes[type];
+
+    if (AttributeType === undefined) {
+      throw Error(`The attribute type ${type} isn't defined, did you pass it to the scraper?`);
+    }
+
+    const scrapedAttribute = new AttributeType(value, this.page.url);
+
+    return scrapedAttribute.value;
+  }
+
+  parseScriptTagContents(): any {
+    const { scriptTagSelector } = this.contract;
+    const contents = this.$(scriptTagSelector).html();
+
+    if (contents && contents.length) {
+      const data = JSON.parse(contents);
+      console.log(data, data.characters);
+    }
+  }
+
+  getScrapedItems(): any[] {
+    const scrapedItems = [];
+    const contents = this.parseScriptTagContents();
+    // const elements = this.$(this.contract.itemSelector).toArray();
+    // const scrapedItems = [];
+
+    // elements.forEach((element: CheerioElement) => {
+    //   const scrapedItem = {};
+
+    //   Object.entries(this.contract.attributes).forEach(([name, options]: [string, any]) => {
+    //     if (options.itemSelector !== undefined) {
+    //       const childElements = this.$(options.itemSelector, element).toArray();
+    //       scrapedItem[name] = [];
+
+    //       childElements.forEach((childElement: CheerioElement) => {
+    //         const childValues = {};
+    //         Object.entries(options.attributes).forEach(([childName, childOptions]: [string, any]) => {
+    //           childValues[childName] = this.mapElementToProperty(childElement, childOptions);
+    //         });
+    //         scrapedItem[name].push(childValues);
+    //       });
+    //     } else {
+    //       scrapedItem[name] = this.mapElementToProperty(element, options);
+    //     }
+    //   });
+
+    //   scrapedItems.push(scrapedItem);
+    // });
+
+    return scrapedItems;
+  }
+}
