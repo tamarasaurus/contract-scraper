@@ -9,6 +9,7 @@ import RequestFetcher from './src/fetcher/request';
 import Fetcher, { ScrapedPage } from './src/fetcher/fetcher';
 import { Provider } from './src/provider/provider';
 import HTMLProvider from './src/provider/html';
+import ScriptTagProvider from './src/provider/script-tag';
 
 interface Attributes {
   [name: string]: any;
@@ -81,6 +82,10 @@ class Scraper {
   }
 
   public getProvider(page: ScrapedPage, attributes: any): Provider {
+    if (this.contract.scriptTagSelector) {
+      return new ScriptTagProvider(page, this.contract, attributes);
+    }
+
     return new HTMLProvider(page, this.contract, attributes);
   }
 }

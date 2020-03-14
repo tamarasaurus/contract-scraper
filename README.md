@@ -254,4 +254,114 @@ scraper.scrapePage().then(items => {
 
 ```
 
+## Parsing JSON inside script tags
 
+Sometimes you may want to extract values from inside a script tag on the page. For the moment, `contract-scraper` only supports parsing JSON. For example:
+
+```html
+<html>
+  <head>
+    <title>Page with a script tag</title>
+  </head>
+  <body>
+    <script type="application/ld+json" id="info">
+      {
+        "characters": [
+          {
+            "name": "Jon Snow",
+            "friends": [
+              { "firstName": "Sansa", "lastName": "Stark" },
+              { "firstName": "Bran", "lastName": "Stark" },
+              { "firstName": "Arya", "lastName": "Stark" }
+            ],
+            "photo": "http://images.com/jonsnow",
+            "price": {
+              "amount": '12345 dollars'
+            }
+          },
+          {
+            "name": "Ned Stark",
+            "friends": [
+              { "firstName": "Sansa", "lastName": "Stark" },
+              { "firstName": "Bobby", "lastName": "B" },
+              { "firstName": "Little", "lastName": "finger" }
+            ],
+            "photo": "http://images.com/nedstark",
+            "price": {
+              "amount": '6789 euros'
+            }
+          }
+        ]
+      }
+    </script>
+  </body>
+```
+
+```javascript
+  const contract = {
+    scriptTagSelector: "#info",
+    itemSelector: 'characters',
+    scrapeAfterLoading: false,
+    attributes: {
+      name: { type: 'text', selector: 'name' },
+      friends: {
+        itemSelector: 'friends', attributes: {
+          firstName: { type: 'text', selector: 'firstName' },
+          lastName: { type: 'text', selector: 'lastName' }
+        }
+      },
+      photo: { type: 'link', selector: 'photo' },
+      price: { type: 'digit', selector: 'price.amount' },
+    },
+  };
+
+const scraper = new Scraper(
+  'http://characters.com',
+  contract
+)
+
+scraper.scrapePage().then(items => {
+  console.log(items)
+// [
+//   {
+//     "name": "Jon Snow",
+//     "friends": [
+//       {
+//         "firstName": "Sansa",
+//         "lastName": "Stark"
+//       },
+//       {
+//         "firstName": "Bran",
+//         "lastName": "Stark"
+//       },
+//       {
+//         "firstName": "Arya",
+//         "lastName": "Stark"
+//       }
+//     ],
+//     "photo": "http://images.com/jonsnow",
+//     "price": 12345
+//   },
+//   {
+//     "name": "Ned Stark",
+//     "friends": [
+//       {
+//         "firstName": "Sansa",
+//         "lastName": "Stark"
+//       },
+//       {
+//         "firstName": "Bobby",
+//         "lastName": "B"
+//       },
+//       {
+//         "firstName": "Little",
+//         "lastName": "finger"
+//       }
+//     ],
+//     "photo": "http://images.com/nedstark",
+//     "price": 6789
+//   }
+// ]
+})
+
+```
