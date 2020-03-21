@@ -37,7 +37,8 @@ const contents = `
           </ul>
         </li>
       </ul>
-      <script type="application/json" id="schema-org">
+      <script type="application/ld+json">whatever</script>
+      <script type="application/ld+json">
         {
           "characters": [
             {
@@ -164,7 +165,7 @@ it('returns scraped data for a url and contract', () => {
 
 it('scrapes a json schema script tag for a url and contract', () => {
   const contract = {
-    scriptTagSelector: "#schema-org",
+    scriptTagSelector: "script[type=\"application/ld+json\"]:eq(1)",
     itemSelector: 'characters',
     scrapeAfterLoading: false,
     attributes: {
