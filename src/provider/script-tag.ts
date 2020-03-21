@@ -1,6 +1,7 @@
 import { Provider } from './provider';
 import { ScrapedPage } from '../fetcher/fetcher';
 import * as cheerio from 'cheerio';
+import find from 'cheerio-eq';
 import get from 'lodash.get';
 
 export default class ScriptTagProvider implements Provider {
@@ -34,7 +35,7 @@ export default class ScriptTagProvider implements Provider {
 
   parseScriptTagContents(): any {
     const { scriptTagSelector } = this.contract;
-    const contents = this.$(scriptTagSelector).html();
+    const contents = find(this.$, scriptTagSelector).html();
 
     if (!contents || contents.length === 0) return;
     return JSON.parse(contents);
