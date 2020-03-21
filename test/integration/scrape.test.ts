@@ -68,6 +68,7 @@ const contents = `
           ]
         }
       </script>
+      <script type="application/json">{"first":"Han Solo"}</script>
     </body>
   </html>
 `;
@@ -203,6 +204,31 @@ it('scrapes a json schema script tag for a url and contract', () => {
       "photo": "http://images.com/nedstark",
       "price": 6789,
     }
+  ]
+
+  scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
+
+  return scraper.scrapePage().then((data) => {
+    assert.equal(
+      JSON.stringify(expectedData, null, 2),
+      JSON.stringify(data, null, 2),
+    );
+  }).catch((error) => { throw error; });
+
+})
+
+it('scrapes raw html from a script tag', () => {
+  const contract = {
+    itemSelector: "body",
+    scrapeAfterLoading: false,
+    attributes: {
+      names: { type: 'text', raw: true, selector: 'script[type=\"application/json\"]' },
+    },
+  };
+
+  const scraper = new Scraper(url, contract);
+  const expectedData = [
+    { names: JSON.stringify({ first: 'Han Solo' }) }
   ]
 
   scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
