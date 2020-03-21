@@ -23,10 +23,14 @@ export default class HTMLProvider implements Provider {
     return this.$(item);
   }
 
-  public getElementValue(element: Cheerio, attribute: string): string {
+  public getElementValue(element: Cheerio, attribute: string, raw: boolean): string {
     if (attribute !== undefined) {
       const value = this.$(element).attr(attribute);
       return (value ? value.trim() : null);
+    }
+
+    if (raw === true) {
+      return this.$(element).html();
     }
 
     return this.$(element).text().trim();
@@ -47,10 +51,10 @@ export default class HTMLProvider implements Provider {
   }
 
   mapElementToProperty(item: CheerioElement, options: any) {
-    const { type, selector, attribute, data } = options;
+    const { type, selector, attribute, data, raw } = options;
 
     const element = this.getItemOrParentElement(item, selector);
-    const value = this.getElementValue(element, attribute);
+    const value = this.getElementValue(element, attribute, raw);
 
     if (data !== undefined) {
       // TODO parse by attribute type

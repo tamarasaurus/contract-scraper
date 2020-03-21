@@ -50,7 +50,7 @@ export default class ScriptTagProvider implements Provider {
 
       Object.entries(this.contract.attributes).forEach(([name, options]: [string, any]) => {
         if (options.itemSelector !== undefined) {
-          const childElements = get(item, options.itemSelector);
+          const childElements = get(item, options.itemSelector) || [];
           scrapedItem[name] = [];
 
           childElements.forEach((childElement: CheerioElement) => {
