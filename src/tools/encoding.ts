@@ -25,7 +25,7 @@ export function encodePageContents(encoding: string, contents: string) {
   const converter: any = lib['Iconv'];
   const iconv = new converter(encoding, 'UTF-8//IGNORE//TRANSLIT');
 
-  if (encoding.toLowerCase() === 'windows-1252') {
+  if (encoding.toLowerCase().includes('windows-')) {
     return contents;
   }
 
