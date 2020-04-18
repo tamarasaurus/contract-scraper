@@ -68,7 +68,7 @@
     "is-relative-url": "^3.0.0",
     "jschardet": "^2.1.0",
     "lodash.get": "^4.4.2",
-    "puppeteer": "^1.14.0",
+    "puppeteer": "^3.0.0",
     "random-useragent": "^0.3.1",
     "request": "^2.88.0",
     "request-promise": "^4.2.4"
