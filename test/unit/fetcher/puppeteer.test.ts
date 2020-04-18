@@ -54,7 +54,6 @@ describe('it fetches data from puppeteer', () => {
       JSON.stringify(page),
       JSON.stringify({
         contents: '<html></html>',
-        encoding: 'utf-8',
         url: 'http://leboncoin.com',
       }),
     );

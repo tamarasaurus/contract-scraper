@@ -76,7 +76,6 @@ const contents = `
 const page: ScrapedPage = {
   contents,
   url,
-  encoding: 'en-US',
 };
 
 class FakeFetcher {
@@ -96,7 +95,6 @@ class FakeFetcher {
 it('returns scraped data for a url and contract', () => {
   const contract = {
     itemSelector: 'body > ul > li',
-    scrapeAfterLoading: false,
     attributes: {
       name: { type: 'text', selector: '.name' },
       photo: { type: 'background-image', selector: '[data-profile]', attribute: 'style' },
@@ -168,7 +166,6 @@ it('scrapes a json schema script tag for a url and contract', () => {
   const contract = {
     scriptTagSelector: "script[type=\"application/ld+json\"]:eq(1)",
     itemSelector: 'characters',
-    scrapeAfterLoading: false,
     attributes: {
       name: { type: 'text', selector: 'name' },
       friends: {
@@ -220,7 +217,6 @@ it('scrapes a json schema script tag for a url and contract', () => {
 it('scrapes raw html from a script tag', () => {
   const contract = {
     itemSelector: "body",
-    scrapeAfterLoading: false,
     attributes: {
       names: { type: 'text', raw: true, selector: 'script[type=\"application/json\"]' },
     },

@@ -5,7 +5,6 @@ import Size from './src/attribute/size';
 import Text from './src/attribute/text';
 
 import PuppeteerFetcher from './src/fetcher/puppeteer';
-import RequestFetcher from './src/fetcher/request';
 import Fetcher, { ScrapedPage } from './src/fetcher/fetcher';
 import { Provider } from './src/provider/provider';
 import HTMLProvider from './src/provider/html';
@@ -44,7 +43,7 @@ class Scraper {
     }
 
     const attributes = this.getAttributes();
-    const fetcher = this.getFetcher(this.contract.scrapeAfterLoading);
+    const fetcher = this.getFetcher();
 
     return fetcher.getPage().then((page: ScrapedPage) => {
       return this.getScrapedItems(page, attributes);
@@ -73,12 +72,8 @@ class Scraper {
     return !(this.contract === null || this.contract === undefined);
   }
 
-  public getFetcher(scrapeAfterLoading: boolean = false): Fetcher {
-    if (scrapeAfterLoading) {
-      return new PuppeteerFetcher(this.url);
-    }
-
-    return new RequestFetcher(this.url);
+  public getFetcher(): Fetcher {
+    return new PuppeteerFetcher(this.url);
   }
 
   public getProvider(page: ScrapedPage, attributes: any): Provider {

@@ -2,7 +2,6 @@ import Fetcher from './fetcher';
 import { ScrapedPage } from '../fetcher/fetcher';
 import randomUserAgent from 'random-useragent';
 import puppeteer from 'puppeteer';
-import { getContentTypeHeaders, guessEncoding } from '../tools/encoding';
 
 export default class PuppeteerFetcher implements Fetcher {
   private url: string;
@@ -56,11 +55,8 @@ export default class PuppeteerFetcher implements Fetcher {
   async getPage(): Promise<ScrapedPage> {
     const { response, contents } = await this.setupBrowser();
 
-    const contentType = getContentTypeHeaders(await response.headers());
-
     return {
       contents,
-      encoding: guessEncoding(contentType, contents),
       url: this.url,
     };
   }

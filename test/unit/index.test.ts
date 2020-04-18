@@ -1,7 +1,6 @@
 import * as assert from 'assert';
 import Scraper from '../../index';
 import PuppeteerFetcher from '../../src/fetcher/puppeteer';
-import RequestFetcher from '../../src/fetcher/request';
 import { ScrapedPage } from '../../src/fetcher/fetcher';
 import HTMLProvider from '../../src/provider/html';
 import * as sinon from 'sinon';
@@ -9,7 +8,6 @@ import * as sinon from 'sinon';
 const contract = {
   itemSelector: 'li[itemtype=\http://schema.org/Offer\]',
   pageQuery: 'page',
-  scrapeAfterLoading: true,
   attributes: {
     name: { type: 'text', selector: '[itemprop=\name\]' },
     price: { type: 'digit', selector: '[itemprop=\price\]' },
@@ -88,7 +86,6 @@ describe('Scrapes a URL based on JSON configuration', () => {
     const page: ScrapedPage = {
       url,
       contents: '',
-      encoding: 'utf-8',
     };
 
     const attributes = scraper.getAttributes();
@@ -120,7 +117,6 @@ describe('Scrapes a URL based on JSON configuration', () => {
         return new Promise((resolve) => {
           return resolve({
             contents: '<html></html>',
-            encoding: 'utf-8',
             url: 'http://leboncoin.com',
           });
         });

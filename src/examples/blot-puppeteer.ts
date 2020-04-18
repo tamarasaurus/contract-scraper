@@ -3,7 +3,6 @@ import Scraper from '../../index';
 const contract = {
   itemSelector: '.bloc_annonce_habitat',
   pageQuery: 'page',
-  scrapeAfterLoading: true,
   attributes: {
     name: { type: 'text', selector: '.title_part1' },
     description: { type: 'text', selector: '.title_part2' },

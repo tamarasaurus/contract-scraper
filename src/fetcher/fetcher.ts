@@ -1,5 +1,4 @@
 export interface ScrapedPage {
-  encoding: string;
   contents: string;
   url: string;
 }

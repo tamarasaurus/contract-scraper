@@ -17,7 +17,6 @@ To scrape a page, you can create a new instance of `contract-scraper` with these
 ```javascript
 let contract = {
   itemSelector: 'li',
-  scrapeAfterLoading: false,
   attributes: {
     name: {
       type: 'text',
@@ -39,10 +38,6 @@ A contract accepts the following properties:
 ### `itemSelector` (string)
 
   A CSS selector for the element to be scraped. The scraper will process all the elements matching this selector.
-
-### `scrapeAfterLoading` (boolean = false)
-
-  Setting `true` will use `puppeteer` to fully load the URL, otherwise the scraper will use `request` to simply request the static HTML of the page. Puppeteer can be useful when the page uses lazy loading for images or other content.
 
 ### `attributes` (object)
 
@@ -66,7 +61,6 @@ Each attribute matches a HTML element to scrape. The attribute type will define 
 ```javascript
 const contract = {
   itemSelector: 'li',
-  scrapeAfterLoading: false,
   attributes: {
     name: {
       type: 'text',
@@ -219,7 +213,6 @@ import Scraper from 'contract-scraper';
 
 const contract = {
   itemSelector: 'li',
-  scrapeAfterLoading: false,
   attributes: {
     countryName: {
       type: 'text',
@@ -301,7 +294,6 @@ Sometimes you may want to extract values from inside a script tag on the page. F
   const contract = {
     scriptTagSelector: "#info",
     itemSelector: 'characters',
-    scrapeAfterLoading: false,
     attributes: {
       name: { type: 'text', selector: 'name' },
       friends: {
