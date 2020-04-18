@@ -60,26 +60,6 @@ describe('Scrapes a URL based on JSON configuration', () => {
     );
   });
 
-  it('decides which fetcher to use based on the user configuration', () => {
-    const url = 'https://google.com';
-    const scraper = new Scraper(url, {});
-
-    assert.equal(
-      JSON.stringify(scraper.getFetcher(true)),
-      JSON.stringify(new PuppeteerFetcher(url)),
-    );
-
-    assert.equal(
-      JSON.stringify(scraper.getFetcher(false)),
-      JSON.stringify(new RequestFetcher(url)),
-    );
-
-    assert.equal(
-      JSON.stringify(scraper.getFetcher()),
-      JSON.stringify(new RequestFetcher(url)),
-    );
-  });
-
   it('gets the html provider', () => {
     const url = 'https://google.com';
     const scraper = new Scraper(url, contract);
