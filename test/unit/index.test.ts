@@ -7,7 +7,6 @@ import * as sinon from 'sinon';
 
 const contract = {
   itemSelector: 'li[itemtype=\http://schema.org/Offer\]',
-  pageQuery: 'page',
   attributes: {
     name: { type: 'text', selector: '[itemprop=\name\]' },
     price: { type: 'number', selector: '[itemprop=\price\]' },

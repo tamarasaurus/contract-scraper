@@ -9,6 +9,7 @@ import Fetcher, { ScrapedPage } from './src/fetcher/fetcher';
 import { Provider } from './src/provider/provider';
 import HTMLProvider from './src/provider/html';
 import ScriptTagProvider from './src/provider/script-tag';
+import buildSchema from './src/contract-schema';
 
 interface Attributes {
   [name: string]: any;
@@ -34,16 +35,17 @@ class Scraper {
   }
 
   public scrapePage(): Promise<any[]> {
-    if (!this.contractIsValid()) {
-      throw Error('Your contract is invalid, please check the specifications');
-    }
+    const attributes = this.getAttributes();
+    const fetcher = this.getFetcher();
+    const { message } = this.contractIsValid(attributes);
 
     if (!this.urlIsValid()) {
       throw Error(`The URL "${this.url}" you have provided is invalid`);
     }
 
-    const attributes = this.getAttributes();
-    const fetcher = this.getFetcher();
+    if (message) {
+      throw Error(message);
+    }
 
     return fetcher.getPage().then((page: ScrapedPage) => {
       return this.getScrapedItems(page, attributes);
@@ -68,8 +70,18 @@ class Scraper {
     }
   }
 
-  public contractIsValid(): boolean {
-    return !(this.contract === null || this.contract === undefined);
+  public contractIsValid(attributes: {
+    [name: string]: any;
+  }): { message: string | null } {
+    if (this.contract === null || this.contract === undefined) {
+      return {
+        message: 'Your contract is invalid, please check the specifications',
+      };
+    }
+
+    const schema = buildSchema(Object.keys(attributes));
+    const { error } = schema.validate(this.contract);
+    return { message: error };
   }
 
   public getFetcher(): Fetcher {
