@@ -10,6 +10,7 @@ import { Provider } from './src/provider/provider';
 import HTMLProvider from './src/provider/html';
 import ScriptTagProvider from './src/provider/script-tag';
 import buildSchema from './src/contract-schema';
+import RequestFetcher from './src/fetcher/request';
 
 interface Attributes {
   [name: string]: any;
@@ -36,7 +37,6 @@ class Scraper {
 
   public scrapePage(): Promise<any[]> {
     const attributes = this.getAttributes();
-    const fetcher = this.getFetcher();
     const { message } = this.contractIsValid(attributes);
 
     if (!this.urlIsValid()) {
@@ -47,6 +47,7 @@ class Scraper {
       throw Error(message);
     }
 
+    const fetcher = this.getFetcher();
     return fetcher.getPage().then((page: ScrapedPage) => {
       return this.getScrapedItems(page, attributes);
     });
@@ -85,6 +86,10 @@ class Scraper {
   }
 
   public getFetcher(): Fetcher {
+    if (this.contract.puppeteer === false) {
+      return new RequestFetcher(this.url);
+    }
+
     return new PuppeteerFetcher(this.url);
   }
 

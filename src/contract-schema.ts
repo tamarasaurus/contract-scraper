@@ -3,6 +3,7 @@ import joi from '@hapi/joi';
 const buildSchema = (allowedTypes) => {
   return joi.object({
     itemSelector: joi.string(),
+    puppeteer: joi.boolean().default(true),
     scriptTagSelector: joi.string(),
     attributes: joi
       .object({

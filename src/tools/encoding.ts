@@ -1,6 +1,6 @@
 import * as jschardet from 'jschardet';
 import * as cheerio from 'cheerio';
-import * as iconv from 'iconv-lite';
+import * as Iconv from 'iconv';
 
 function getCharsetFromContentType(contentType: string) {
   const regex = /(?<=charset=)[^;]*/gm;
@@ -21,11 +21,15 @@ export function getContentTypeHeaders(headers: any) {
 }
 
 export function encodePageContents(encoding: string, contents: string) {
+  const lib: any = Iconv;
+  const converter: any = lib['Iconv'];
+  const iconv = new converter(encoding, 'UTF-8//IGNORE//TRANSLIT');
+
   if (encoding.toLowerCase().includes('windows-')) {
     return contents;
   }
 
-  return iconv.decode(Buffer.from(contents), encoding);
+  return iconv.convert(contents).toString('utf-8');
 }
 
 export function guessEncoding(contentType: string, contents: string) {

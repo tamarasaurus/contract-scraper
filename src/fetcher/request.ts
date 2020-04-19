@@ -35,9 +35,10 @@ export default class RequestFetcher implements Fetcher {
     return this.getRequestLibrary().get(this.url, {
       headers: {
         'Content-Type': 'text/html; charset=utf-8',
-        'Accept': 'text/html',
+        Accept: 'text/html',
         'Accept-Language': 'fr-FR',
         'User-Agent': userAgent,
-      }});
+      },
+    });
   }
 }
