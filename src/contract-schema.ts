@@ -1,4 +1,4 @@
-import joi from 'joi';
+import joi from '@hapi/joi';
 
 const buildSchema = (allowedTypes) => {
   return joi.object({
@@ -11,12 +11,16 @@ const buildSchema = (allowedTypes) => {
       .pattern(
         /^/,
         joi.object({
-          type: joi.string().valid(...allowedTypes).when('itemSelector', {
-            is: joi.exist(),
-            then: joi.forbidden()
-          }).optional(),
+          type: joi
+            .string()
+            .valid(...allowedTypes)
+            .when('itemSelector', {
+              is: joi.exist(),
+              then: joi.forbidden(),
+            })
+            .optional(),
           raw: joi.boolean(),
-          selector: joi.string().optional(),
+          selector: joi.string().optional().allow(''),
           attribute: joi.string(),
           data: joi.object({
             name: joi.string(),
@@ -31,20 +35,22 @@ const buildSchema = (allowedTypes) => {
               /^/,
               joi.object({
                 type: joi.string().default('text'),
-                selector: joi.string().optional(),
+                selector: joi.string().optional().allow(''),
                 attribute: joi.string(),
                 data: joi.object({
                   name: joi.string(),
                   key: joi.string(),
                 }),
               }),
-            ).when('itemSelector', {
+            )
+            .when('itemSelector', {
               is: joi.exist(),
               then: joi.required(),
             }),
         }),
-      ).required(),
+      )
+      .required(),
   });
-}
+};
 
-export default buildSchema
+export default buildSchema;

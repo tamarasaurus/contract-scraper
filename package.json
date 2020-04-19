@@ -62,10 +62,10 @@
   },
   "homepage": "https://github.com/tamarasaurus/contract-scraper#readme",
   "dependencies": {
+    "@hapi/joi": "^17.1.1",
     "cheerio": "^1.0.0-rc.3",
     "cheerio-eq": "^1.0.1",
     "is-relative-url": "^3.0.0",
-    "joi": "^14.3.1",
     "lodash.get": "^4.4.2",
     "puppeteer": "^1.14.0",
     "random-useragent": "^0.3.1"
