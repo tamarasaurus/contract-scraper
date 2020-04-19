@@ -74,6 +74,7 @@ const contents = `
 `;
 
 const page: ScrapedPage = {
+  encoding: 'utf-8',
   contents,
   url,
 };

@@ -31,10 +31,10 @@
     "instrument": true,
     "all": true,
     "check-coverage": true,
-    "lines": 85,
-    "statements": 85,
-    "functions": 85,
-    "branches": 85
+    "lines": 80,
+    "statements": 80,
+    "functions": 80,
+    "branches": 80
   },
   "scripts": {
     "test": "rm -rf coverage && nyc mocha",
@@ -63,9 +63,12 @@
   "homepage": "https://github.com/tamarasaurus/contract-scraper#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
+    "axios": "^0.19.2",
     "cheerio": "^1.0.0-rc.3",
     "cheerio-eq": "^1.0.1",
+    "iconv-lite": "^0.5.1",
     "is-relative-url": "^3.0.0",
+    "jschardet": "^2.1.1",
     "lodash.get": "^4.4.2",
     "puppeteer": "^1.14.0",
     "random-useragent": "^0.3.1"

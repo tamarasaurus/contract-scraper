@@ -62,6 +62,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
     const scraper = new Scraper(url, contract);
     const page: ScrapedPage = {
       url,
+      encoding: 'utf-8',
       contents: '',
     };
 
@@ -78,6 +79,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
     const scraper = new Scraper(url, contract);
     const page: ScrapedPage = {
       url,
+      encoding: 'utf-8',
       contents: '',
     };
 
