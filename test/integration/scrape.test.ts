@@ -99,9 +99,9 @@ it('returns scraped data for a url and contract', () => {
       name: { type: 'text', selector: '.name' },
       photo: { type: 'background-image', selector: '[data-profile]', attribute: 'style' },
       link: { type: 'link', selector: 'a', attribute: 'href' },
-      price: { type: 'digit', selector: '[data-price]', data: { name: 'price', key: 'amount' } },
-      currency: { type: 'digit', selector: '[any-price]', data: { name: 'price', key: 'currency' } },
-      country: { type: 'digit', selector: '[any-price]', data: { name: 'country' } },
+      price: { type: 'number', selector: '[data-price]', data: { name: 'price', key: 'amount' } },
+      currency: { type: 'number', selector: '[any-price]', data: { name: 'price', key: 'currency' } },
+      country: { type: 'number', selector: '[any-price]', data: { name: 'country' } },
       city: { type: 'text', selector: 'description', attribute: 'city' },
       size: { type: 'size', selector: '[data-size]', attribute: 'data-size' },
       description: { type: 'text', selector: '.description' },
@@ -175,7 +175,7 @@ it('scrapes a json schema script tag for a url and contract', () => {
         }
       },
       photo: { type: 'link', selector: 'photo' },
-      price: { type: 'digit', selector: 'price.amount' },
+      price: { type: 'number', selector: 'price.amount' },
     },
   };
 

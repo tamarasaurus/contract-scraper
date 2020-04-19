@@ -7,10 +7,9 @@ import * as sinon from 'sinon';
 
 const contract = {
   itemSelector: 'li[itemtype=\http://schema.org/Offer\]',
-  pageQuery: 'page',
   attributes: {
     name: { type: 'text', selector: '[itemprop=\name\]' },
-    price: { type: 'digit', selector: '[itemprop=\price\]' },
+    price: { type: 'number', selector: '[itemprop=\price\]' },
   },
 };
 
@@ -38,9 +37,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
 
   it('merges custom attribute types from the user', () => {
     function Special(inputValue: string) {
-      this.value = inputValue;
-
-      return this.value;
+      return inputValue;
     }
 
     const customAttributeTypes = { special: Special };
@@ -75,6 +72,22 @@ describe('Scrapes a URL based on JSON configuration', () => {
       JSON.stringify(new HTMLProvider(page, contract, attributes)),
     );
   });
+
+  it('gets the fetcher', () => {
+    const url = 'https://google.com';
+    const scraper = new Scraper(url, contract);
+    const page: ScrapedPage = {
+      url,
+      contents: '',
+    };
+
+    const attributes = scraper.getAttributes();
+
+    assert.equal(
+      JSON.stringify(scraper.getFetcher()),
+      JSON.stringify(new PuppeteerFetcher(url)),
+    );
+  })
 
   it('returns scraped data from a url', () => {
     const scraper = new Scraper('http://leboncoin.com', contract);

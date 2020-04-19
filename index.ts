@@ -1,14 +1,15 @@
-import BackgroundImage from './src/attribute/background-image';
-import Link from './src/attribute/link';
-import Digit from './src/attribute/digit';
-import Size from './src/attribute/size';
-import Text from './src/attribute/text';
+import backgroundImage from './src/attribute/background-image';
+import link from './src/attribute/link';
+import number from './src/attribute/number';
+import size from './src/attribute/size';
+import text from './src/attribute/text';
 
 import PuppeteerFetcher from './src/fetcher/puppeteer';
 import Fetcher, { ScrapedPage } from './src/fetcher/fetcher';
 import { Provider } from './src/provider/provider';
 import HTMLProvider from './src/provider/html';
 import ScriptTagProvider from './src/provider/script-tag';
+import buildSchema from './src/contract-schema';
 
 interface Attributes {
   [name: string]: any;
@@ -16,11 +17,11 @@ interface Attributes {
 
 class Scraper {
   public defaultAttributes: any = {
-    'background-image': BackgroundImage,
-    link: Link,
-    digit: Digit,
-    size: Size,
-    text: Text,
+    'background-image': backgroundImage,
+    link,
+    number,
+    size,
+    text,
   };
 
   private url: string;
@@ -34,16 +35,17 @@ class Scraper {
   }
 
   public scrapePage(): Promise<any[]> {
-    if (!this.contractIsValid()) {
-      throw Error('Your contract is invalid, please check the specifications');
-    }
+    const attributes = this.getAttributes();
+    const fetcher = this.getFetcher();
+    const { message } = this.contractIsValid(attributes);
 
     if (!this.urlIsValid()) {
       throw Error(`The URL "${this.url}" you have provided is invalid`);
     }
 
-    const attributes = this.getAttributes();
-    const fetcher = this.getFetcher();
+    if (message) {
+      throw Error(message);
+    }
 
     return fetcher.getPage().then((page: ScrapedPage) => {
       return this.getScrapedItems(page, attributes);
@@ -68,8 +70,18 @@ class Scraper {
     }
   }
 
-  public contractIsValid(): boolean {
-    return !(this.contract === null || this.contract === undefined);
+  public contractIsValid(attributes: {
+    [name: string]: any;
+  }): { message: string | null } {
+    if (this.contract === null || this.contract === undefined) {
+      return {
+        message: 'Your contract is invalid, please check the specifications',
+      };
+    }
+
+    const schema = buildSchema(Object.keys(attributes));
+    const { error } = schema.validate(this.contract);
+    return { message: error };
   }
 
   public getFetcher(): Fetcher {

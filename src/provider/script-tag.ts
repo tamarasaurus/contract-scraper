@@ -22,15 +22,13 @@ export default class ScriptTagProvider implements Provider {
   mapElementToProperty(item: any, options: any) {
     const { type, selector } = options;
     const value = get(item, selector);
-    const AttributeType = this.attributes[type];
+    const attributeType = this.attributes[type];
 
-    if (AttributeType === undefined) {
+    if (attributeType === undefined) {
       throw Error(`The attribute type ${type} isn't defined, did you pass it to the scraper?`);
     }
 
-    const scrapedAttribute = new AttributeType(value, this.page.url);
-
-    return scrapedAttribute.value;
+    return attributeType(value, this.page.url);
   }
 
   parseScriptTagContents(): any {

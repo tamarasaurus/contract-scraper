@@ -53,7 +53,7 @@ export default class PuppeteerFetcher implements Fetcher {
   }
 
   async getPage(): Promise<ScrapedPage> {
-    const { response, contents } = await this.setupBrowser();
+    const { contents } = await this.setupBrowser();
 
     return {
       contents,

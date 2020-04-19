@@ -67,7 +67,7 @@ const contract = {
       selector: '.name'
     },
     price: {
-      type: 'digit',
+      type: 'number',
       selector: '.price'
     }
   }
@@ -101,7 +101,7 @@ Each attribute can have the following properties:
   * `type` (string) - A custom type, or one of the in-built ones that returns:
     * `background-image`: A background-image url from a style string
     * `link`: An absolute URL
-    * `digit`: A number
+    * `number`: A number
     * `size`: A number for size in m².
     * `text`: Inner text of the element
   * `attribute (optional)` (string)
@@ -140,7 +140,7 @@ Each attribute can have the following properties:
       ```javascript
       {
         name: 'Price',
-        type: 'digit',
+        type: 'number',
         selector: 'data-price',
         data: { name: 'price', key: 'currency'}
       }
@@ -226,7 +226,7 @@ const contract = {
 }
 
 function ListFromString(commaSeparatedString) {
-  this.value = commaSeparatedString.split(',');
+  return commaSeparatedString.split(',');
 }
 
 const scraper = new Scraper(
@@ -303,7 +303,7 @@ Sometimes you may want to extract values from inside a script tag on the page. F
         }
       },
       photo: { type: 'link', selector: 'photo' },
-      price: { type: 'digit', selector: 'price.amount' },
+      price: { type: 'number', selector: 'price.amount' },
     },
   };
 
