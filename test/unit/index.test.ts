@@ -10,7 +10,7 @@ const contract = {
   pageQuery: 'page',
   attributes: {
     name: { type: 'text', selector: '[itemprop=\name\]' },
-    price: { type: 'digit', selector: '[itemprop=\price\]' },
+    price: { type: 'number', selector: '[itemprop=\price\]' },
   },
 };
 

@@ -1,8 +1,8 @@
-import BackgroundImage from './src/attribute/background-image';
-import Link from './src/attribute/link';
-import Digit from './src/attribute/digit';
-import Size from './src/attribute/size';
-import Text from './src/attribute/text';
+import backgroundImage from './src/attribute/background-image';
+import link from './src/attribute/link';
+import number from './src/attribute/number';
+import size from './src/attribute/size';
+import text from './src/attribute/text';
 
 import PuppeteerFetcher from './src/fetcher/puppeteer';
 import Fetcher, { ScrapedPage } from './src/fetcher/fetcher';
@@ -16,11 +16,11 @@ interface Attributes {
 
 class Scraper {
   public defaultAttributes: any = {
-    'background-image': BackgroundImage,
-    link: Link,
-    digit: Digit,
-    size: Size,
-    text: Text,
+    'background-image': backgroundImage,
+    link,
+    number,
+    size,
+    text,
   };
 
   private url: string;
