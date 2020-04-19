@@ -16,7 +16,7 @@ const buildSchema = (allowedTypes) => {
             then: joi.forbidden()
           }).optional(),
           raw: joi.boolean(),
-          selector: joi.string(),
+          selector: joi.string().optional(),
           attribute: joi.string(),
           data: joi.object({
             name: joi.string(),
@@ -31,13 +31,12 @@ const buildSchema = (allowedTypes) => {
               /^/,
               joi.object({
                 type: joi.string().default('text'),
-                selector: joi.string(),
+                selector: joi.string().optional(),
                 attribute: joi.string(),
                 data: joi.object({
                   name: joi.string(),
                   key: joi.string(),
                 }),
-                // itemSelector: joi.string(),
               }),
             ).when('itemSelector', {
               is: joi.exist(),
