@@ -59,6 +59,6 @@ describe('creates a background image attribute', () => {
   });
 
   it('returns null if the url is invalid', () => {
-    assert.equal(backgroundImage('whatever', 'whatever'), null);
+    assert.equal(backgroundImage('whatever', 'http::!/whatever'), null);
   });
 });

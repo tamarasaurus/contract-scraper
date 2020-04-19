@@ -18,7 +18,9 @@
       "node_modules",
       "coverage",
       "test",
-      "src/examples"
+      "src/examples",
+      "src/fetcher/puppeteer.ts",
+      "src/provider/provider.ts"
     ],
     "reporter": [
       "text",

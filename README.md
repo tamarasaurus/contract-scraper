@@ -226,7 +226,7 @@ const contract = {
 }
 
 function ListFromString(commaSeparatedString) {
-  this.value = commaSeparatedString.split(',');
+  return commaSeparatedString.split(',');
 }
 
 const scraper = new Scraper(

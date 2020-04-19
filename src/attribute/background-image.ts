@@ -1,7 +1,7 @@
 import * as url from 'url';
 import isRelativeUrl from 'is-relative-url';
 
-export default (inputValue: string = null, rootUrl: string) => {
+export default (inputValue: string, rootUrl: string) => {
   const isEmpty = (style: string): boolean => {
     return style === undefined || style === null || style.trim().length === 0;
   };
