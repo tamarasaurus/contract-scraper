@@ -98,11 +98,27 @@ it('returns scraped data for a url and contract', () => {
     itemSelector: 'body > ul > li',
     attributes: {
       name: { type: 'text', selector: '.name' },
-      photo: { type: 'background-image', selector: '[data-profile]', attribute: 'style' },
+      photo: {
+        type: 'background-image',
+        selector: '[data-profile]',
+        attribute: 'style',
+      },
       link: { type: 'link', selector: 'a', attribute: 'href' },
-      price: { type: 'number', selector: '[data-price]', data: { name: 'price', key: 'amount' } },
-      currency: { type: 'number', selector: '[any-price]', data: { name: 'price', key: 'currency' } },
-      country: { type: 'number', selector: '[any-price]', data: { name: 'country' } },
+      price: {
+        type: 'number',
+        selector: '[data-price]',
+        data: { name: 'price', key: 'amount' },
+      },
+      currency: {
+        type: 'number',
+        selector: '[any-price]',
+        data: { name: 'price', key: 'currency' },
+      },
+      country: {
+        type: 'number',
+        selector: '[any-price]',
+        data: { name: 'country' },
+      },
       city: { type: 'text', selector: 'description', attribute: 'city' },
       size: { type: 'size', selector: '[data-size]', attribute: 'data-size' },
       description: { type: 'text', selector: '.description' },
@@ -111,7 +127,7 @@ it('returns scraped data for a url and contract', () => {
         itemSelector: 'ul li',
         attributes: {
           firstName: { type: 'text', selector: 'em' },
-          lastName: { type: 'text', selector: 'strong' }
+          lastName: { type: 'text', selector: 'strong' },
         },
       },
     },
@@ -130,7 +146,8 @@ it('returns scraped data for a url and contract', () => {
       city: null,
       size: 56,
       description: 'A cool dude',
-      fullText: 'Jon Snow\n          \n          23423\n          123\n           A cool dude \n          \n            StarkSansa\n            StarkBran\n            StarkArya',
+      fullText:
+        'Jon Snow\n          \n          23423\n          123\n           A cool dude \n          \n            StarkSansa\n            StarkBran\n            StarkArya',
       friends: [
         { firstName: 'Sansa', lastName: 'Stark' },
         { firstName: 'Bran', lastName: 'Stark' },
@@ -146,7 +163,8 @@ it('returns scraped data for a url and contract', () => {
       city: null,
       size: 5536,
       description: 'Dies a lot',
-      fullText: 'Ned Stark\n          \n          23423\n          43543\n          Dies a lot \n          \n            StarkSansa\n            BBobby\n            fingerLittle',
+      fullText:
+        'Ned Stark\n          \n          23423\n          43543\n          Dies a lot \n          \n            StarkSansa\n            BBobby\n            fingerLittle',
       friends: [
         { firstName: 'Sansa', lastName: 'Stark' },
         { firstName: 'Bobby', lastName: 'B' },
@@ -155,25 +173,31 @@ it('returns scraped data for a url and contract', () => {
     },
   ];
 
-  return scraper.scrapePage().then((data) => {
-    assert.equal(
-      JSON.stringify(expectedData, null, 2),
-      JSON.stringify(data, null, 2),
-    );
-  }).catch((error) => { throw error; });
+  return scraper
+    .scrapePage()
+    .then((data) => {
+      assert.equal(
+        JSON.stringify(expectedData, null, 2),
+        JSON.stringify(data, null, 2),
+      );
+    })
+    .catch((error) => {
+      throw error;
+    });
 });
 
 it('scrapes a json schema script tag for a url and contract', () => {
   const contract = {
-    scriptTagSelector: "script[type=\"application/ld+json\"]:eq(1)",
+    scriptTagSelector: 'script[type="application/ld+json"]:eq(1)',
     itemSelector: 'characters',
     attributes: {
       name: { type: 'text', selector: 'name' },
       friends: {
-        itemSelector: 'friends', attributes: {
+        itemSelector: 'friends',
+        attributes: {
           firstName: { type: 'text', selector: 'firstName' },
-          lastName: { type: 'text', selector: 'lastName' }
-        }
+          lastName: { type: 'text', selector: 'lastName' },
+        },
       },
       photo: { type: 'link', selector: 'photo' },
       price: { type: 'number', selector: 'price.amount' },
@@ -183,58 +207,97 @@ it('scrapes a json schema script tag for a url and contract', () => {
   const scraper = new Scraper(url, contract);
   const expectedData = [
     {
-      "name": "Jon Snow",
-      "friends": [
-        { firstName: "Sansa", lastName: "Stark" },
-        { firstName: "Bran", lastName: "Stark" },
-        { firstName: "Arya", lastName: "Stark" },
+      name: 'Jon Snow',
+      friends: [
+        { firstName: 'Sansa', lastName: 'Stark' },
+        { firstName: 'Bran', lastName: 'Stark' },
+        { firstName: 'Arya', lastName: 'Stark' },
       ],
-      "photo": "http://images.com/jonsnow",
-      "price": 12345,
+      photo: 'http://images.com/jonsnow',
+      price: 12345,
     },
     {
-      "name": "Ned Stark",
-      "friends": [
-        { firstName: "Sansa", lastName: "Stark" },
-        { firstName: "Bobby", lastName: "B" },
-        { firstName: "Little", lastName: "finger" },
+      name: 'Ned Stark',
+      friends: [
+        { firstName: 'Sansa', lastName: 'Stark' },
+        { firstName: 'Bobby', lastName: 'B' },
+        { firstName: 'Little', lastName: 'finger' },
       ],
-      "photo": "http://images.com/nedstark",
-      "price": 6789,
-    }
-  ]
+      photo: 'http://images.com/nedstark',
+      price: 6789,
+    },
+  ];
 
   scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
 
-  return scraper.scrapePage().then((data) => {
-    assert.equal(
-      JSON.stringify(expectedData, null, 2),
-      JSON.stringify(data, null, 2),
-    );
-  }).catch((error) => { throw error; });
-
-})
+  return scraper
+    .scrapePage()
+    .then((data) => {
+      assert.equal(
+        JSON.stringify(expectedData, null, 2),
+        JSON.stringify(data, null, 2),
+      );
+    })
+    .catch((error) => {
+      throw error;
+    });
+});
 
 it('scrapes raw html from a script tag', () => {
   const contract = {
-    itemSelector: "body",
+    itemSelector: 'body',
     attributes: {
-      names: { type: 'text', raw: true, selector: 'script[type=\"application/json\"]' },
+      names: {
+        type: 'text',
+        raw: true,
+        selector: 'script[type="application/json"]',
+      },
     },
   };
 
   const scraper = new Scraper(url, contract);
-  const expectedData = [
-    { names: JSON.stringify({ first: 'Han Solo' }) }
-  ]
+  const expectedData = [{ names: JSON.stringify({ first: 'Han Solo' }) }];
 
   scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
 
-  return scraper.scrapePage().then((data) => {
-    assert.equal(
-      JSON.stringify(expectedData, null, 2),
-      JSON.stringify(data, null, 2),
-    );
-  }).catch((error) => { throw error; });
+  return scraper
+    .scrapePage()
+    .then((data) => {
+      assert.equal(
+        JSON.stringify(expectedData, null, 2),
+        JSON.stringify(data, null, 2),
+      );
+    })
+    .catch((error) => {
+      throw error;
+    });
+});
 
-})
+it('returns the scraped page object', () => {
+  const contract = {
+    itemSelector: 'body',
+    attributes: {
+      names: {
+        type: 'text',
+        raw: true,
+        selector: 'script[type="application/json"]',
+      },
+    },
+  };
+
+  const scraper = new Scraper(url, contract);
+  const expectedData = [{ names: JSON.stringify({ first: 'Han Solo' }) }];
+
+  scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
+
+  return scraper
+    .getPageContents()
+    .then((data) => {
+      console.log('data', data)
+      assert.equal(data.page.encoding, 'utf-8');
+      assert.equal(data.page.url, url);
+    })
+    .catch((error) => {
+      throw error;
+    });
+});

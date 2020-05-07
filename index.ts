@@ -11,6 +11,7 @@ import HTMLProvider from './src/provider/html';
 import ScriptTagProvider from './src/provider/script-tag';
 import buildSchema from './src/contract-schema';
 import RequestFetcher from './src/fetcher/request';
+import * as cheerio from 'cheerio';
 
 interface Attributes {
   [name: string]: any;
@@ -51,6 +52,27 @@ class Scraper {
     return fetcher.getPage().then((page: ScrapedPage) => {
       return this.getScrapedItems(page, attributes);
     });
+  }
+
+   public async getPageContents(): Promise<{ page: ScrapedPage, $: CheerioStatic }> {
+    const attributes = this.getAttributes();
+    const { message } = this.contractIsValid(attributes);
+
+    if (!this.urlIsValid()) {
+      throw Error(`The URL "${this.url}" you have provided is invalid`);
+    }
+
+    if (message) {
+      throw Error(message);
+    }
+
+    const fetcher = this.getFetcher();
+    const page = await fetcher.getPage()
+
+    return {
+      page,
+      $: cheerio.load(page.contents),
+    }
   }
 
   public getScrapedItems(page: ScrapedPage, attributes: any) {
