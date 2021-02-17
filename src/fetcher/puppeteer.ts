@@ -15,7 +15,7 @@ export default class PuppeteerFetcher implements Fetcher {
     return puppeteer;
   }
 
-  public async setupBrowser(): Promise<{ response: puppeteer.Response, contents: string }> {
+  public async setupBrowser(): Promise<{ response: puppeteer.HTTPResponse, contents: string }> {
     const browserType = this.getBrowserType();
     const userAgent = randomUserAgent.getRandom();
     const browser = await browserType.launch({

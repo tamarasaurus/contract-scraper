@@ -176,7 +176,7 @@ it('returns scraped data for a url and contract', () => {
   return scraper
     .scrapePage()
     .then((data) => {
-      assert.equal(
+      assert.strictEqual(
         JSON.stringify(expectedData, null, 2),
         JSON.stringify(data, null, 2),
       );
@@ -233,7 +233,7 @@ it('scrapes a json schema script tag for a url and contract', () => {
   return scraper
     .scrapePage()
     .then((data) => {
-      assert.equal(
+      assert.strictEqual(
         JSON.stringify(expectedData, null, 2),
         JSON.stringify(data, null, 2),
       );
@@ -263,7 +263,7 @@ it('scrapes raw html from a script tag', () => {
   return scraper
     .scrapePage()
     .then((data) => {
-      assert.equal(
+      assert.strictEqual(
         JSON.stringify(expectedData, null, 2),
         JSON.stringify(data, null, 2),
       );
@@ -293,9 +293,8 @@ it('returns the scraped page object', () => {
   return scraper
     .getPageContents()
     .then((data) => {
-      console.log('data', data)
-      assert.equal(data.page.encoding, 'utf-8');
-      assert.equal(data.page.url, url);
+      assert.strictEqual(data.page.encoding, 'utf-8');
+      assert.strictEqual(data.page.url, url);
     })
     .catch((error) => {
       throw error;
