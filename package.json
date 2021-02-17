@@ -63,7 +63,7 @@
   "homepage": "https://github.com/tamarasaurus/contract-scraper#readme",
   "dependencies": {
     "@hapi/joi": "^17.1.1",
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.3",
     "cheerio-eq": "^1.0.1",
     "iconv": "^2.3.5",
