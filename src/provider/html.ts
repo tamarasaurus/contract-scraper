@@ -6,7 +6,7 @@ export default class HTMLProvider implements Provider {
   private page: ScrapedPage;
   private contract: any;
   private attributes: any;
-  private $: CheerioStatic;
+  private $: cheerio.Root;
 
   constructor(page, contract, attributes) {
     this.page = page;
@@ -15,7 +15,7 @@ export default class HTMLProvider implements Provider {
     this.$ = cheerio.load(this.page.contents);
   }
 
-  public getItemOrParentElement(item: CheerioElement, selector: string): Cheerio {
+  public getItemOrParentElement(item: cheerio.Element, selector: string): cheerio.Cheerio {
     if (selector !== undefined) {
       return this.$(selector, item);
     }
@@ -23,7 +23,7 @@ export default class HTMLProvider implements Provider {
     return this.$(item);
   }
 
-  public getElementValue(element: Cheerio, attribute: string, raw: boolean): string {
+  public getElementValue(element: cheerio.Cheerio, attribute: string, raw: boolean): string {
     if (attribute !== undefined) {
       const value = this.$(element).attr(attribute);
       return (value ? value.trim() : null);
@@ -36,7 +36,7 @@ export default class HTMLProvider implements Provider {
     return this.$(element).text().trim();
   }
 
-  public getElementDataAttributeKeyValue(element: Cheerio, { name, key }): string | null {
+  public getElementDataAttributeKeyValue(element: cheerio.Cheerio, { name, key }): string | null {
     const value = this.$(element).data(name);
 
     if (name !== undefined && key !== undefined) {
@@ -50,7 +50,7 @@ export default class HTMLProvider implements Provider {
     return value;
   }
 
-  mapElementToProperty(item: CheerioElement, options: any) {
+  mapElementToProperty(item: cheerio.Element, options: any) {
     const { type, selector, attribute, data, raw } = options;
 
     const element = this.getItemOrParentElement(item, selector);
@@ -74,7 +74,7 @@ export default class HTMLProvider implements Provider {
     const elements = this.$(this.contract.itemSelector).toArray();
     const scrapedItems = [];
 
-    elements.forEach((element: CheerioElement) => {
+    elements.forEach((element: cheerio.Element) => {
       const scrapedItem = {};
 
       Object.entries(this.contract.attributes).forEach(([name, options]: [string, any]) => {
@@ -82,7 +82,7 @@ export default class HTMLProvider implements Provider {
           const childElements = this.$(options.itemSelector, element).toArray();
           scrapedItem[name] = [];
 
-          childElements.forEach((childElement: CheerioElement) => {
+          childElements.forEach((childElement: cheerio.Element) => {
             const childValues = {};
             Object.entries(options.attributes).forEach(([childName, childOptions]: [string, any]) => {
               childValues[childName] = this.mapElementToProperty(childElement, childOptions);

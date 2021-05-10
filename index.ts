@@ -54,7 +54,7 @@ class Scraper {
     });
   }
 
-   public async getPageContents(): Promise<{ page: ScrapedPage, $: CheerioStatic }> {
+   public async getPageContents(): Promise<{ page: ScrapedPage, $: cheerio.Root }> {
     const attributes = this.getAttributes();
     const { message } = this.contractIsValid(attributes);
 

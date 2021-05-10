@@ -9,7 +9,7 @@ export default class ScriptTagProvider implements Provider {
   private contract: any;
   private attributes: any;
   private contents: any;
-  private $: CheerioStatic;
+  private $: cheerio.Root;
 
   constructor(page, contract, attributes) {
     this.page = page;
@@ -55,7 +55,7 @@ export default class ScriptTagProvider implements Provider {
           const childElements = get(item, options.itemSelector) || [];
           scrapedItem[name] = [];
 
-          childElements.forEach((childElement: CheerioElement) => {
+          childElements.forEach((childElement: cheerio.Element) => {
             const childValues = {};
             Object.entries(options.attributes).forEach(([childName, childOptions]: [string, any]) => {
               childValues[childName] = this.mapElementToProperty(childElement, childOptions);
