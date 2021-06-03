@@ -2,7 +2,7 @@
 
 With contract-scraper you can easily scrape a HTML page and return the data in a structured format.
 
-[![Build Status](https://travis-ci.org/tamarasaurus/contract-scraper.svg?branch=master)](https://travis-ci.org/tamarasaurus/contract-scraper)
+![Build status](https://github.com/tamarasaurus/contract-scraper/actions/workflows/main.yml/badge.svg)
 
 ## Installation
 
@@ -17,6 +17,7 @@ To scrape a page, you can create a new instance of `contract-scraper` with these
 ```javascript
 let contract = {
   itemSelector: 'li',
+  puppeteer: true
   attributes: {
     name: {
       type: 'text',
@@ -30,14 +31,28 @@ let contract = {
   }
 }
 
-const scraper = new Scraper('http://website.com', contract)
+const puppeteerOptions = {
+  headless: false,
+}
+
+const scraper = new Scraper('http://website.com', contract, puppeteerOptions)
 ```
+
+A scraper can be initialised with custom [puppeteer launch options](https://github.com/puppeteer/puppeteer/blob/2605309f74b43da160cda4d214016e4422bf7676/src/node/LaunchOptions.ts).
 
 A contract accepts the following properties:
 
 ### `itemSelector` (string)
 
-  A CSS selector for the element to be scraped. The scraper will process all the elements matching this selector.
+A CSS selector for the element to be scraped. The scraper will process all the elements matching this selector.
+
+### `puppeteer` (boolean)
+
+If set to true contract-scraper will use Puppeteer to load and scrape the page contents
+
+### `waitForPageLoadSelector` (string)
+
+Puppeteer will wait for this CSS selector to exist in the DOM before scraping the page. Must be used in conjunction with `pupeeteer: true`
 
 ### `attributes` (object)
 
@@ -55,7 +70,8 @@ Each attribute matches a HTML element to scrape. The attribute type will define 
     <div class="name">Captain America</div>
     <div class="price">500 euros</div>
   </li>
-<ul>
+  <ul></ul>
+</ul>
 ```
 
 ```javascript
@@ -64,22 +80,19 @@ const contract = {
   attributes: {
     name: {
       type: 'text',
-      selector: '.name'
+      selector: '.name',
     },
     price: {
       type: 'number',
-      selector: '.price'
-    }
-  }
-}
+      selector: '.price',
+    },
+  },
+};
 
-const scraper = new Scraper(
-  'http://characters.com',
-  contract
-)
+const scraper = new Scraper('http://characters.com', contract);
 
 scraper.scrapePage().then(items => {
-  console.log(items)
+  console.log(items);
   // [
   //   {
   //     name: 'Iron man',
@@ -90,62 +103,65 @@ scraper.scrapePage().then(items => {
   //     price: 500
   //   }
   // ]
-})
-
+});
 ```
 
 Each attribute can have the following properties:
 
-  * `name` (string) - A label for this attribute for the final output
-  * `selector` (string) - The CSS selector for the element (scoped to itemSelector).
-  * `type` (string) - A custom type, or one of the in-built ones that returns:
-    * `background-image`: A background-image url from a style string
-    * `link`: An absolute URL
-    * `number`: A number
-    * `size`: A number for size in m².
-    * `text`: Inner text of the element
-  * `attribute (optional)` (string)
+- `name` (string) - A label for this attribute for the final output
+- `selector` (string) - The CSS selector for the element (scoped to itemSelector).
+- `type` (string) - A custom type, or one of the in-built ones that returns:
+  - `background-image`: A background-image url from a style string
+  - `link`: An absolute URL
+  - `number`: A number
+  - `size`: A number for size in m².
+  - `text`: Inner text of the element
+- `attribute (optional)` (string)
 
-    The name of the HTML attribute to scrape data from. E.g. for an element:
+  The name of the HTML attribute to scrape data from. E.g. for an element:
+
+  ```html
+  <a href="http://linktoscrape">Homepage</a>
+  ```
+
+  ```javascript
+    {
+      name: 'URL',
+      type: 'link',
+      selector: 'a',
+      attribute: 'href'
+    }
+  ```
+
+  By default the attribute type will use the innerText of the element if `attribute` is not specified.
+
+- `data (optional)` (object) - If you want to scrape HTML data attributes you can do it in two ways:
+  - Directly scraping a data attribute:
     ```html
-      <a href="http://linktoscrape">Homepage</a>
+    <div data-country="Australia"></div>
     ```
     ```javascript
-      {
-        name: 'URL',
-        type: 'link',
-        selector: 'a',
-        attribute: 'href'
-      }
+    {
+      name: 'Country',
+      type: 'text',
+      selector: 'data-country',
+      data: { name: 'country' }
+    }
     ```
-    By default the attribute type will use the innerText of the element if `attribute` is not specified.
-  * `data (optional)` (object) - If you want to scrape HTML data attributes you can do it in two ways:
-    * Directly scraping a data attribute:
-      ```html
-      <div data-country="Australia">
-      ```
-      ```javascript
-      {
-        name: 'Country',
-        type: 'text',
-        selector: 'data-country',
-        data: { name: 'country' }
-      }
-      ```
-      This will return "Australia" in your list of results.
-    * For scraping a JSON value inside a data attribute:
-      ```html
-      <div data-price="{currency: 'aud'}"></div>
-      ```
-      ```javascript
-      {
-        name: 'Price',
-        type: 'number',
-        selector: 'data-price',
-        data: { name: 'price', key: 'currency'}
-      }
-      ````
-      This will return "aud" in your list of results.
+    This will return "Australia" in your list of results.
+  - For scraping a JSON value inside a data attribute:
+    ```html
+    <div data-price="{currency: 'aud'}"></div>
+    ```
+    ```javascript
+    {
+      name: 'Price',
+      type: 'number',
+      selector: 'data-price',
+      data: { name: 'price', key: 'currency'}
+    }
+    ```
+    This will return "aud" in your list of results.
 
 ### Nested attributes
 
@@ -164,6 +180,7 @@ It's also possible to scrape nested attributes, like a list inside an item:
 ```
 
 The contract:
+
 ```json
 {
   "itemSelector": ".friends li",
@@ -181,6 +198,7 @@ The contract:
 ```
 
 So this will return all the `friends` as an array (using any type):
+
 ```javascript
 [
   {
@@ -188,9 +206,9 @@ So this will return all the `friends` as an array (using any type):
     friends: [
       { firstName: 'Iron', lastName: 'Man' },
       { firstName: 'Captain', lastName: 'America' },
-    ]
-  }
-]
+    ],
+  },
+];
 ```
 
 ## Custom attributes types
@@ -216,24 +234,22 @@ const contract = {
   attributes: {
     countryName: {
       type: 'text',
-      selector: '.name'
+      selector: '.name',
     },
     tags: {
       type: 'list',
-      selector: '.tags'
-    }
-  }
-}
+      selector: '.tags',
+    },
+  },
+};
 
 function ListFromString(commaSeparatedString) {
   return commaSeparatedString.split(',');
 }
 
-const scraper = new Scraper(
-  'http://countries.com',
-  contract,
-  { 'list': ListFromString }
-)
+const scraper = new Scraper('http://countries.com', contract, {
+  list: ListFromString,
+});
 
 scraper.scrapePage().then(items => {
   console.log(items);
@@ -243,8 +259,7 @@ scraper.scrapePage().then(items => {
   //     tags: [ 'spiders', 'vegemite', 'scorching', 'heat' ]
   //   }
   // ]
-})
-
+});
 ```
 
 ## Parsing JSON inside script tags
@@ -269,7 +284,7 @@ Sometimes you may want to extract values from inside a script tag on the page. F
             ],
             "photo": "http://images.com/jonsnow",
             "price": {
-              "amount": '12345 dollars'
+              "amount": "12345 dollars"
             }
           },
           {
@@ -281,79 +296,77 @@ Sometimes you may want to extract values from inside a script tag on the page. F
             ],
             "photo": "http://images.com/nedstark",
             "price": {
-              "amount": '6789 euros'
+              "amount": "6789 euros"
             }
           }
         ]
       }
     </script>
   </body>
+</html>
 ```
 
 ```javascript
-  const contract = {
-    scriptTagSelector: "#info",
-    itemSelector: 'characters',
-    attributes: {
-      name: { type: 'text', selector: 'name' },
-      friends: {
-        itemSelector: 'friends', attributes: {
-          firstName: { type: 'text', selector: 'firstName' },
-          lastName: { type: 'text', selector: 'lastName' }
-        }
+const contract = {
+  scriptTagSelector: '#info',
+  itemSelector: 'characters',
+  attributes: {
+    name: { type: 'text', selector: 'name' },
+    friends: {
+      itemSelector: 'friends',
+      attributes: {
+        firstName: { type: 'text', selector: 'firstName' },
+        lastName: { type: 'text', selector: 'lastName' },
       },
-      photo: { type: 'link', selector: 'photo' },
-      price: { type: 'number', selector: 'price.amount' },
     },
-  };
+    photo: { type: 'link', selector: 'photo' },
+    price: { type: 'number', selector: 'price.amount' },
+  },
+};
 
-const scraper = new Scraper(
-  'http://characters.com',
-  contract
-)
+const scraper = new Scraper('http://characters.com', contract);
 
 scraper.scrapePage().then(items => {
-  console.log(items)
-// [
-//   {
-//     "name": "Jon Snow",
-//     "friends": [
-//       {
-//         "firstName": "Sansa",
-//         "lastName": "Stark"
-//       },
-//       {
-//         "firstName": "Bran",
-//         "lastName": "Stark"
-//       },
-//       {
-//         "firstName": "Arya",
-//         "lastName": "Stark"
-//       }
-//     ],
-//     "photo": "http://images.com/jonsnow",
-//     "price": 12345
-//   },
-//   {
-//     "name": "Ned Stark",
-//     "friends": [
-//       {
-//         "firstName": "Sansa",
-//         "lastName": "Stark"
-//       },
-//       {
-//         "firstName": "Bobby",
-//         "lastName": "B"
-//       },
-//       {
-//         "firstName": "Little",
-//         "lastName": "finger"
-//       }
-//     ],
-//     "photo": "http://images.com/nedstark",
-//     "price": 6789
-//   }
-// ]
-})
-
+  console.log(items);
+  // [
+  //   {
+  //     "name": "Jon Snow",
+  //     "friends": [
+  //       {
+  //         "firstName": "Sansa",
+  //         "lastName": "Stark"
+  //       },
+  //       {
+  //         "firstName": "Bran",
+  //         "lastName": "Stark"
+  //       },
+  //       {
+  //         "firstName": "Arya",
+  //         "lastName": "Stark"
+  //       }
+  //     ],
+  //     "photo": "http://images.com/jonsnow",
+  //     "price": 12345
+  //   },
+  //   {
+  //     "name": "Ned Stark",
+  //     "friends": [
+  //       {
+  //         "firstName": "Sansa",
+  //         "lastName": "Stark"
+  //       },
+  //       {
+  //         "firstName": "Bobby",
+  //         "lastName": "B"
+  //       },
+  //       {
+  //         "firstName": "Little",
+  //         "lastName": "finger"
+  //       }
+  //     ],
+  //     "photo": "http://images.com/nedstark",
+  //     "price": 6789
+  //   }
+  // ]
+});
 ```
