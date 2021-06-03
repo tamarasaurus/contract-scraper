@@ -12,6 +12,7 @@ import ScriptTagProvider from './src/provider/script-tag';
 import buildSchema from './src/contract-schema';
 import RequestFetcher from './src/fetcher/request';
 import * as cheerio from 'cheerio';
+import { PuppeteerNodeLaunchOptions } from 'puppeteer';
 
 interface Attributes {
   [name: string]: any;
@@ -29,11 +30,18 @@ class Scraper {
   private url: string;
   private contract: any;
   private attributes: Attributes;
+  private puppeteerOptions: PuppeteerNodeLaunchOptions;
 
-  constructor(url: string, contract: any, attributes: Attributes = {}) {
+  constructor(
+    url: string,
+    contract: any,
+    attributes: Attributes = {},
+    puppeteerOptions?: PuppeteerNodeLaunchOptions,
+  ) {
     this.url = url;
     this.contract = contract;
     this.attributes = attributes;
+    this.puppeteerOptions = puppeteerOptions;
   }
 
   public scrapePage(): Promise<any[]> {
@@ -54,7 +62,10 @@ class Scraper {
     });
   }
 
-   public async getPageContents(): Promise<{ page: ScrapedPage, $: cheerio.Root }> {
+  public async getPageContents(): Promise<{
+    page: ScrapedPage;
+    $: cheerio.Root;
+  }> {
     const attributes = this.getAttributes();
     const { message } = this.contractIsValid(attributes);
 
@@ -67,12 +78,12 @@ class Scraper {
     }
 
     const fetcher = this.getFetcher();
-    const page = await fetcher.getPage()
+    const page = await fetcher.getPage();
 
     return {
       page,
       $: cheerio.load(page.contents),
-    }
+    };
   }
 
   public getScrapedItems(page: ScrapedPage, attributes: any) {
@@ -93,9 +104,9 @@ class Scraper {
     }
   }
 
-  public contractIsValid(attributes: {
-    [name: string]: any;
-  }): { message: string | null } {
+  public contractIsValid(attributes: { [name: string]: any }): {
+    message: string | null;
+  } {
     if (this.contract === null || this.contract === undefined) {
       return {
         message: 'Your contract is invalid, please check the specifications',
@@ -108,11 +119,15 @@ class Scraper {
   }
 
   public getFetcher(): Fetcher {
-    if (this.contract.puppeteer === false) {
-      return new RequestFetcher(this.url);
+    if (this.contract.puppeteer === true) {
+      return new PuppeteerFetcher(
+        this.url,
+        this.contract.waitForPageLoadSelector,
+        this.puppeteerOptions,
+      );
     }
 
-    return new PuppeteerFetcher(this.url);
+    return new RequestFetcher(this.url);
   }
 
   public getProvider(page: ScrapedPage, attributes: any): Provider {

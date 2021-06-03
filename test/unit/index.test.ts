@@ -4,12 +4,13 @@ import PuppeteerFetcher from '../../src/fetcher/puppeteer';
 import { ScrapedPage } from '../../src/fetcher/fetcher';
 import HTMLProvider from '../../src/provider/html';
 import * as sinon from 'sinon';
+import RequestFetcher from '../../src/fetcher/request';
 
 const contract = {
-  itemSelector: 'li[itemtype=\http://schema.org/Offer\]',
+  itemSelector: 'li[itemtype=http://schema.org/Offer]',
   attributes: {
-    name: { type: 'text', selector: '[itemprop=\name\]' },
-    price: { type: 'number', selector: '[itemprop=\price\]' },
+    name: { type: 'text', selector: '[itemprop=\name]' },
+    price: { type: 'number', selector: '[itemprop=price]' },
   },
 };
 
@@ -75,21 +76,21 @@ describe('Scrapes a URL based on JSON configuration', () => {
   });
 
   it('gets the fetcher', () => {
-    const url = 'https://google.com';
-    const scraper = new Scraper(url, contract);
-    const page: ScrapedPage = {
-      url,
-      encoding: 'utf-8',
-      contents: '',
-    };
-
-    const attributes = scraper.getAttributes();
-
-    assert.equal(
-      JSON.stringify(scraper.getFetcher()),
-      JSON.stringify(new PuppeteerFetcher(url)),
+    const requestScraper = new Scraper('https://google.com', contract);
+    assert.strictEqual(
+      requestScraper.getFetcher() instanceof RequestFetcher,
+      true,
     );
-  })
+
+    const puppeteerScraper = new Scraper('https://google.com', {
+      ...contract,
+      puppeteer: true,
+    });
+    assert.strictEqual(
+      puppeteerScraper.getFetcher() instanceof PuppeteerFetcher,
+      true,
+    );
+  });
 
   it('returns scraped data from a url', () => {
     const scraper = new Scraper('http://leboncoin.com', contract);
@@ -109,7 +110,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
       }
 
       getPage() {
-        return new Promise((resolve) => {
+        return new Promise(resolve => {
           return resolve({
             contents: '<html></html>',
             url: 'http://leboncoin.com',
@@ -118,14 +119,18 @@ describe('Scrapes a URL based on JSON configuration', () => {
       }
     }
 
-    scraper.getFetcher = sinon.stub().returns(new FakeFetcher('http://leboncoin.com'));
+    scraper.getFetcher = sinon
+      .stub()
+      .returns(new FakeFetcher('http://leboncoin.com'));
     scraper.getProvider = sinon.stub().returns(new ProviderStub());
 
-    return scraper.scrapePage().then((data) => {
-      assert.equal(
-        JSON.stringify(data),
-        JSON.stringify(expectedData),
-      );
-    }).catch((error) => { throw error; });
+    return scraper
+      .scrapePage()
+      .then(data => {
+        assert.equal(JSON.stringify(data), JSON.stringify(expectedData));
+      })
+      .catch(error => {
+        throw error;
+      });
   });
 });

@@ -1,27 +1,44 @@
 import Fetcher from './fetcher';
 import { ScrapedPage } from '../fetcher/fetcher';
 import randomUserAgent from 'random-useragent';
-import puppeteer from 'puppeteer';
+import puppeteer, { PuppeteerNodeLaunchOptions } from 'puppeteer';
 import { getContentTypeHeaders, guessEncoding } from '../tools/encoding';
 
 export default class PuppeteerFetcher implements Fetcher {
   private url: string;
+  private waitForPageLoadSelector: string;
+  private options: PuppeteerNodeLaunchOptions;
 
-  constructor(url) {
+  constructor(
+    url: string,
+    waitForPageLoadSelector?: string,
+    options?: PuppeteerNodeLaunchOptions,
+  ) {
     this.url = url;
+    this.waitForPageLoadSelector = waitForPageLoadSelector;
+    this.options = options || { headless: true };
   }
 
   public getBrowserType() {
     return puppeteer;
   }
 
-  public async setupBrowser(): Promise<{ response: puppeteer.HTTPResponse, contents: string }> {
+  public async setupBrowser(): Promise<{
+    response: puppeteer.HTTPResponse;
+    contents: string;
+  }> {
     const browserType = this.getBrowserType();
     const userAgent = randomUserAgent.getRandom();
     const browser = await browserType.launch({
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--allow-insecure', '--disable-web-security'],
+      headless: this.options.headless,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--allow-insecure',
+        '--disable-web-security',
+      ],
       ignoreHTTPSErrors: true,
+      slowMo: 10,
     });
 
     const page = await browser.newPage();
@@ -30,13 +47,18 @@ export default class PuppeteerFetcher implements Fetcher {
       await page.setUserAgent(userAgent);
       await page.setExtraHTTPHeaders({
         'Content-Type': 'text/html; charset=utf-8',
-        'Accept': 'text/html',
+        Accept: 'text/html',
         'Accept-Language': 'fr-FR',
       });
 
       await page.setViewport({ width: 1280, height: 1000 });
 
       const response = await page.goto(this.url);
+
+      if (this.waitForPageLoadSelector) {
+        await page.waitForSelector(this.waitForPageLoadSelector);
+      }
+
       const contents = await page.content();
 
       await page.close();
@@ -50,7 +72,6 @@ export default class PuppeteerFetcher implements Fetcher {
       console.log(`Error fetching ${this.url} with puppeteer`);
       throw e;
     }
-
   }
 
   async getPage(): Promise<ScrapedPage> {
