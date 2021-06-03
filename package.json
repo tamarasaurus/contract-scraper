@@ -43,7 +43,8 @@
     "watch": "tsc -w -p .",
     "lint": "tslint --project tslint.json",
     "lint-fix": "tslint --fix --project tslint.json",
-    "example": "ts-node ./src/examples/scrape"
+    "example": "ts-node ./src/examples/scrape",
+    "example-wait": "ts-node ./src/examples/waitForPageLoadSelector.ts"
   },
   "repository": {
     "type": "git",

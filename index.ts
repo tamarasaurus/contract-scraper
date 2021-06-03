@@ -54,7 +54,10 @@ class Scraper {
     });
   }
 
-   public async getPageContents(): Promise<{ page: ScrapedPage, $: cheerio.Root }> {
+  public async getPageContents(): Promise<{
+    page: ScrapedPage;
+    $: cheerio.Root;
+  }> {
     const attributes = this.getAttributes();
     const { message } = this.contractIsValid(attributes);
 
@@ -67,12 +70,12 @@ class Scraper {
     }
 
     const fetcher = this.getFetcher();
-    const page = await fetcher.getPage()
+    const page = await fetcher.getPage();
 
     return {
       page,
       $: cheerio.load(page.contents),
-    }
+    };
   }
 
   public getScrapedItems(page: ScrapedPage, attributes: any) {
@@ -93,9 +96,9 @@ class Scraper {
     }
   }
 
-  public contractIsValid(attributes: {
-    [name: string]: any;
-  }): { message: string | null } {
+  public contractIsValid(attributes: { [name: string]: any }): {
+    message: string | null;
+  } {
     if (this.contract === null || this.contract === undefined) {
       return {
         message: 'Your contract is invalid, please check the specifications',
@@ -112,7 +115,11 @@ class Scraper {
       return new RequestFetcher(this.url);
     }
 
-    return new PuppeteerFetcher(this.url);
+    return new PuppeteerFetcher(
+      this.url,
+      this.contract.waitForPageLoadSelector,
+      this.contract.headless,
+    );
   }
 
   public getProvider(page: ScrapedPage, attributes: any): Provider {
