@@ -3,11 +3,16 @@
 With contract-scraper you can easily scrape a HTML page and return the data in a structured format.
 
 ![Build status](https://github.com/tamarasaurus/contract-scraper/actions/workflows/main.yml/badge.svg)
+![npm](https://img.shields.io/npm/v/contract-scraper)
 
 ## Installation
 
 ```bash
 npm install contract-scraper --save
+```
+
+```bash
+yarn add contract-scraper
 ```
 
 ## Usage
