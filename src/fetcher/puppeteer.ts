@@ -1,18 +1,22 @@
 import Fetcher from './fetcher';
 import { ScrapedPage } from '../fetcher/fetcher';
 import randomUserAgent from 'random-useragent';
-import puppeteer from 'puppeteer';
+import puppeteer, { PuppeteerNodeLaunchOptions } from 'puppeteer';
 import { getContentTypeHeaders, guessEncoding } from '../tools/encoding';
 
 export default class PuppeteerFetcher implements Fetcher {
   private url: string;
   private waitForPageLoadSelector: string;
-  private headless: boolean;
+  private options: PuppeteerNodeLaunchOptions;
 
-  constructor(url, waitForPageLoadSelector, headless = true) {
+  constructor(
+    url,
+    waitForPageLoadSelector,
+    options: PuppeteerNodeLaunchOptions = { headless: true },
+  ) {
     this.url = url;
     this.waitForPageLoadSelector = waitForPageLoadSelector;
-    this.headless = headless;
+    this.options = options;
   }
 
   public getBrowserType() {
@@ -26,7 +30,7 @@ export default class PuppeteerFetcher implements Fetcher {
     const browserType = this.getBrowserType();
     const userAgent = randomUserAgent.getRandom();
     const browser = await browserType.launch({
-      headless: this.headless,
+      headless: this.options.headless,
       args: [
         '--no-sandbox',
         '--disable-setuid-sandbox',

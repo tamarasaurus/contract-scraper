@@ -12,6 +12,7 @@ import ScriptTagProvider from './src/provider/script-tag';
 import buildSchema from './src/contract-schema';
 import RequestFetcher from './src/fetcher/request';
 import * as cheerio from 'cheerio';
+import { PuppeteerNodeLaunchOptions } from 'puppeteer';
 
 interface Attributes {
   [name: string]: any;
@@ -29,11 +30,18 @@ class Scraper {
   private url: string;
   private contract: any;
   private attributes: Attributes;
+  private puppeteerOptions: PuppeteerNodeLaunchOptions;
 
-  constructor(url: string, contract: any, attributes: Attributes = {}) {
+  constructor(
+    url: string,
+    contract: any,
+    attributes: Attributes = {},
+    puppeteerOptions: PuppeteerNodeLaunchOptions = {},
+  ) {
     this.url = url;
     this.contract = contract;
     this.attributes = attributes;
+    this.puppeteerOptions = puppeteerOptions;
   }
 
   public scrapePage(): Promise<any[]> {
@@ -118,7 +126,7 @@ class Scraper {
     return new PuppeteerFetcher(
       this.url,
       this.contract.waitForPageLoadSelector,
-      this.contract.headless,
+      this.puppeteerOptions,
     );
   }
 
