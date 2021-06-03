@@ -4,7 +4,6 @@ const buildSchema = allowedTypes => {
   return joi.object({
     itemSelector: joi.string(),
     waitForPageLoadSelector: joi.string(),
-    headless: joi.boolean().default(true),
     puppeteer: joi.boolean().default(true),
     scriptTagSelector: joi.string(),
     attributes: joi

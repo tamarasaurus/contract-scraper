@@ -10,13 +10,13 @@ export default class PuppeteerFetcher implements Fetcher {
   private options: PuppeteerNodeLaunchOptions;
 
   constructor(
-    url,
-    waitForPageLoadSelector,
-    options: PuppeteerNodeLaunchOptions = { headless: true },
+    url: string,
+    waitForPageLoadSelector?: string,
+    options?: PuppeteerNodeLaunchOptions,
   ) {
     this.url = url;
     this.waitForPageLoadSelector = waitForPageLoadSelector;
-    this.options = options;
+    this.options = options || { headless: true };
   }
 
   public getBrowserType() {

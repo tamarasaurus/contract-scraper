@@ -36,7 +36,7 @@ class Scraper {
     url: string,
     contract: any,
     attributes: Attributes = {},
-    puppeteerOptions: PuppeteerNodeLaunchOptions = {},
+    puppeteerOptions?: PuppeteerNodeLaunchOptions,
   ) {
     this.url = url;
     this.contract = contract;
@@ -119,15 +119,15 @@ class Scraper {
   }
 
   public getFetcher(): Fetcher {
-    if (this.contract.puppeteer === false) {
-      return new RequestFetcher(this.url);
+    if (this.contract.puppeteer === true) {
+      return new PuppeteerFetcher(
+        this.url,
+        this.contract.waitForPageLoadSelector,
+        this.puppeteerOptions,
+      );
     }
 
-    return new PuppeteerFetcher(
-      this.url,
-      this.contract.waitForPageLoadSelector,
-      this.puppeteerOptions,
-    );
+    return new RequestFetcher(this.url);
   }
 
   public getProvider(page: ScrapedPage, attributes: any): Provider {
