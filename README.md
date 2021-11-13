@@ -22,7 +22,7 @@ To scrape a page, you can create a new instance of `contract-scraper` with these
 ```javascript
 let contract = {
   itemSelector: 'li',
-  puppeteer: true
+  puppeteer: true,
   attributes: {
     name: {
       type: 'text',
