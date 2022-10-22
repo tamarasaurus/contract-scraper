@@ -1,5 +1,4 @@
 import Scraper from '../../index';
-import * as assert from 'assert';
 import { ScrapedPage } from '../../src/fetcher/fetcher';
 import * as sinon from 'sinon';
 
@@ -232,8 +231,7 @@ it('scrapes a json schema script tag for a url and contract', () => {
   return scraper
     .scrapePage()
     .then(data => {
-      assert.strictEqual(
-        JSON.stringify(expectedData, null, 2),
+      expect(JSON.stringify(expectedData, null, 2)).toEqual(
         JSON.stringify(data, null, 2),
       );
     })
@@ -262,8 +260,7 @@ it('scrapes raw html from a script tag', () => {
   return scraper
     .scrapePage()
     .then(data => {
-      assert.strictEqual(
-        JSON.stringify(expectedData, null, 2),
+      expect(JSON.stringify(expectedData, null, 2)).toEqual(
         JSON.stringify(data, null, 2),
       );
     })
@@ -292,8 +289,8 @@ it('returns the scraped page object', () => {
   return scraper
     .getPageContents()
     .then(data => {
-      assert.strictEqual(data.page.encoding, 'utf-8');
-      assert.strictEqual(data.page.url, url);
+      expect(data.page.encoding).toEqual('utf-8');
+      expect(data.page.url).toEqual(url);
     })
     .catch(error => {
       throw error;
