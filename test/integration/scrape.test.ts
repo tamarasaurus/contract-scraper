@@ -80,14 +80,14 @@ const page: ScrapedPage = {
 };
 
 class FakeFetcher {
-  private url: string;
+  url: string;
 
   constructor(url: string) {
     this.url = url;
   }
 
   getPage() {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       return resolve(page);
     });
   }
@@ -175,13 +175,12 @@ it('returns scraped data for a url and contract', () => {
 
   return scraper
     .scrapePage()
-    .then((data) => {
-      assert.strictEqual(
-        JSON.stringify(expectedData, null, 2),
+    .then(data => {
+      expect(JSON.stringify(expectedData, null, 2)).toStrictEqual(
         JSON.stringify(data, null, 2),
       );
     })
-    .catch((error) => {
+    .catch(error => {
       throw error;
     });
 });
@@ -232,13 +231,13 @@ it('scrapes a json schema script tag for a url and contract', () => {
 
   return scraper
     .scrapePage()
-    .then((data) => {
+    .then(data => {
       assert.strictEqual(
         JSON.stringify(expectedData, null, 2),
         JSON.stringify(data, null, 2),
       );
     })
-    .catch((error) => {
+    .catch(error => {
       throw error;
     });
 });
@@ -262,13 +261,13 @@ it('scrapes raw html from a script tag', () => {
 
   return scraper
     .scrapePage()
-    .then((data) => {
+    .then(data => {
       assert.strictEqual(
         JSON.stringify(expectedData, null, 2),
         JSON.stringify(data, null, 2),
       );
     })
-    .catch((error) => {
+    .catch(error => {
       throw error;
     });
 });
@@ -292,11 +291,11 @@ it('returns the scraped page object', () => {
 
   return scraper
     .getPageContents()
-    .then((data) => {
+    .then(data => {
       assert.strictEqual(data.page.encoding, 'utf-8');
       assert.strictEqual(data.page.url, url);
     })
-    .catch((error) => {
+    .catch(error => {
       throw error;
     });
 });

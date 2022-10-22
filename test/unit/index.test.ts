@@ -21,19 +21,13 @@ describe('Scrapes a URL based on JSON configuration', () => {
       null,
     );
 
-    assert.throws(
-      () => scraper.scrapePage(),
-      new Error('Your contract is invalid, please check the specifications'),
-    );
+    expect(() => scraper.scrapePage()).toThrowError('Your contract is invalid, please check the specifications')
   });
 
   it('validates a url', () => {
     const scraper = new Scraper('an invalid url', {});
 
-    assert.throws(
-      () => scraper.scrapePage(),
-      new Error('The URL "an invalid url" you have provided is invalid'),
-    );
+    expect(() => scraper.scrapePage()).toThrowError('The URL "an invalid url" you have provided is invalid')
   });
 
   it('merges custom attribute types from the user', () => {
@@ -103,7 +97,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
     }
 
     class FakeFetcher {
-      private url: string;
+      public url: string;
 
       constructor(url: string) {
         this.url = url;
