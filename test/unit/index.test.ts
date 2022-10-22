@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import Scraper from '../../index';
 import PuppeteerFetcher from '../../src/fetcher/puppeteer';
 import { ScrapedPage } from '../../src/fetcher/fetcher';
@@ -15,24 +14,28 @@ const contract = {
 };
 
 describe('Scrapes a URL based on JSON configuration', () => {
+  let testContext: any;
+
+  beforeEach(() => {
+    testContext = {};
+  });
+
   it('validates a JSON contract', () => {
     const scraper = new Scraper(
       'https://www.leboncoin.fr/annonces/offres/pays_de_la_loire/',
       null,
     );
 
-    assert.throws(
-      () => scraper.scrapePage(),
-      new Error('Your contract is invalid, please check the specifications'),
+    expect(() => scraper.scrapePage()).toThrowError(
+      'Your contract is invalid, please check the specifications',
     );
   });
 
   it('validates a url', () => {
     const scraper = new Scraper('an invalid url', {});
 
-    assert.throws(
-      () => scraper.scrapePage(),
-      new Error('The URL "an invalid url" you have provided is invalid'),
+    expect(() => scraper.scrapePage()).toThrowError(
+      'The URL "an invalid url" you have provided is invalid',
     );
   });
 
@@ -52,8 +55,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
 
     scraper.defaultAttributes = defaultAttributeTypes;
 
-    assert.equal(
-      scraper.getAttributes(),
+    expect(scraper.getAttributes()).toEqual(
       Object.assign(defaultAttributeTypes, customAttributeTypes),
     );
   });
@@ -69,27 +71,20 @@ describe('Scrapes a URL based on JSON configuration', () => {
 
     const attributes = scraper.getAttributes();
 
-    assert.equal(
-      JSON.stringify(scraper.getProvider(page, attributes)),
+    expect(JSON.stringify(scraper.getProvider(page, attributes))).toEqual(
       JSON.stringify(new HTMLProvider(page, contract, attributes)),
     );
   });
 
   it('gets the fetcher', () => {
     const requestScraper = new Scraper('https://google.com', contract);
-    assert.strictEqual(
-      requestScraper.getFetcher() instanceof RequestFetcher,
-      true,
-    );
+    expect(requestScraper.getFetcher()).toBeInstanceOf(RequestFetcher);
 
     const puppeteerScraper = new Scraper('https://google.com', {
       ...contract,
       puppeteer: true,
     });
-    assert.strictEqual(
-      puppeteerScraper.getFetcher() instanceof PuppeteerFetcher,
-      true,
-    );
+    expect(puppeteerScraper.getFetcher()).toBeInstanceOf(PuppeteerFetcher);
   });
 
   it('returns scraped data from a url', () => {
@@ -103,10 +98,10 @@ describe('Scrapes a URL based on JSON configuration', () => {
     }
 
     class FakeFetcher {
-      private url: string;
+      public url: string;
 
       constructor(url: string) {
-        this.url = url;
+        testContext.url = url;
       }
 
       getPage() {
@@ -127,7 +122,7 @@ describe('Scrapes a URL based on JSON configuration', () => {
     return scraper
       .scrapePage()
       .then(data => {
-        assert.equal(JSON.stringify(data), JSON.stringify(expectedData));
+        expect(JSON.stringify(data)).toEqual(JSON.stringify(expectedData));
       })
       .catch(error => {
         throw error;

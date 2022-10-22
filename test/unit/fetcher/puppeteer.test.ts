@@ -1,11 +1,10 @@
 import PuppeteerFetcher from '../../../src/fetcher/puppeteer';
 import * as sinon from 'sinon';
-import * as assert from 'assert';
 
 class FakePage {
-  setUserAgent() { }
-  setExtraHTTPHeaders() { }
-  setViewport() { }
+  setUserAgent() {}
+  setExtraHTTPHeaders() {}
+  setViewport() {}
   goto() {
     return {
       headers: () => {
@@ -18,14 +17,14 @@ class FakePage {
   content() {
     return '<html></html>';
   }
-  close() { }
+  close() {}
 }
 
 class FakeBrowser {
   newPage() {
     return new FakePage();
   }
-  close() { }
+  close() {}
 }
 
 class FakePuppeteer {
@@ -41,17 +40,19 @@ describe('it fetches data from puppeteer', () => {
   it('sets up the browser', async () => {
     const { response, contents } = await puppeteerFetcher.setupBrowser();
 
-    assert.equal(
-      JSON.stringify({ response, contents }, null, 2),
-      JSON.stringify({ response: { headers: () => { } }, contents: '<html></html>' }, null, 2),
+    expect(JSON.stringify({ response, contents }, null, 2)).toEqual(
+      JSON.stringify(
+        { response: { headers: () => {} }, contents: '<html></html>' },
+        null,
+        2,
+      ),
     );
   });
 
   it('gets page contents from the browser page', async () => {
     const page = await puppeteerFetcher.getPage();
 
-    assert.equal(
-      JSON.stringify(page),
+    expect(JSON.stringify(page)).toEqual(
       JSON.stringify({
         contents: '<html></html>',
         encoding: 'utf-8',

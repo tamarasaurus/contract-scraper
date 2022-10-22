@@ -1,31 +1,28 @@
-import Scraper from '../../index'
+import Scraper from '../../index';
 
 const contract = {
-  itemSelector: '[class*="RecipesGrid"] [class*="RecipeItem"]',
+  itemSelector: '.blog-list .post-container',
   puppeteer: true,
   attributes: {
     photo: {
-      type: 'link',
-      selector: 'img',
-      attribute: 'src'
+      type: 'background-image',
+      selector: '.sh-ratio-content',
+      attribute: 'style',
     },
     link: {
       type: 'link',
-      selector: 'a',
-      attribute: 'href'
+      selector: 'a.post-overlay',
+      attribute: 'href',
     },
     name: {
       type: 'text',
-      selector: 'a'
-    }
-  }
-}
+      selector: 'h2',
+    },
+  },
+};
 
-const scraper = new Scraper(
-  'https://www.quitoque.fr/recettes',
-  contract
-)
+const scraper = new Scraper('https://www.kazoart.com/blog/en/', contract);
 
 scraper.scrapePage().then(recipes => {
-  console.log(recipes)
-})
+  console.log(recipes);
+});

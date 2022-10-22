@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import backgroundImage from '../../../src/attribute/background-image';
 
 const rootUrl = 'http://website.com/';
@@ -9,56 +8,56 @@ describe('creates a background image attribute', () => {
     const fullUrl = `color:red;background-image:url('${imageUrl}')`;
     const image = backgroundImage(fullUrl, rootUrl);
 
-    assert.equal(image, imageUrl);
+    expect(image).toEqual(imageUrl);
   });
 
   it('extracts a relative url from a style tag', () => {
     const relativeUrl = `color:red;background-image:url('../images/whatever.jpeg')`;
     const image = backgroundImage(relativeUrl, rootUrl);
-    assert.equal(image, imageUrl);
+    expect(image).toEqual(imageUrl);
   });
 
   it('extracts a relative url from a style tag and returns the root', () => {
     const relativeUrl = `color:red;background-image:url('/images/whatever.jpeg')`;
     const image = backgroundImage(relativeUrl, rootUrlWithPath);
-    assert.equal(image, imageUrl);
+    expect(image).toEqual(imageUrl);
   });
 
   it('extracts a url with spacing', () => {
     const urlWithSpacing = `whatever:blah; background-image: url('${imageUrl}')`;
     const imageWithSpacing = backgroundImage(urlWithSpacing, rootUrl);
-    assert.equal(imageWithSpacing, imageUrl);
+    expect(imageWithSpacing).toEqual(imageUrl);
   });
 
   it('extracts a url without spacing', () => {
     const urlWithoutSpacing = `whatever:blah; background-image:url('${imageUrl}')`;
     const imageWithoutSpacing = backgroundImage(urlWithoutSpacing, rootUrl);
-    assert.equal(imageWithoutSpacing, imageUrl);
+    expect(imageWithoutSpacing).toEqual(imageUrl);
   });
 
   it('extracts a url without quotes', () => {
     const urlWithoutQuotes = `whatever:blah; background-image:url(${imageUrl})`;
     const imageWithoutQuotes = backgroundImage(urlWithoutQuotes, rootUrl);
-    assert.equal(imageWithoutQuotes, imageUrl);
+    expect(imageWithoutQuotes).toEqual(imageUrl);
   });
 
   it('extracts a url with single quotes', () => {
     const urlWithSingleQuotes = `whatever:blah; background-image:url('${imageUrl}')`;
     const imageWithSingleQuotes = backgroundImage(urlWithSingleQuotes, rootUrl);
-    assert.equal(imageWithSingleQuotes, imageUrl);
+    expect(imageWithSingleQuotes).toEqual(imageUrl);
   });
 
   it('extracts a url with double quotes', () => {
     const urlWithDoubleQuotes = `whatever:blah; background-image:url("${imageUrl}")`;
     const imageWithDoubleQuotes = backgroundImage(urlWithDoubleQuotes, rootUrl);
-    assert.equal(imageWithDoubleQuotes, imageUrl);
+    expect(imageWithDoubleQuotes).toEqual(imageUrl);
   });
 
   it('returns null if the url is empty', () => {
-    assert.equal(backgroundImage('', 'whatever'), null);
+    expect(backgroundImage('', 'whatever')).toEqual(null);
   });
 
   it('returns null if the url is invalid', () => {
-    assert.equal(backgroundImage('whatever', 'http::!/whatever'), null);
+    expect(backgroundImage('whatever', 'http::!/whatever')).toEqual(null);
   });
 });

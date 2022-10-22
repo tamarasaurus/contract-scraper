@@ -1,20 +1,18 @@
-import * as assert from 'assert';
 import number from '../../../src/attribute/number';
 
 describe('creates a number attribute', () => {
   it('returns the number from a number string', () => {
-    assert.equal(number('345 000 €'), 345000);
-    assert.equal(number('TAXE FONCIÈRE 423 €.'), 423);
+    expect(number('345 000 €')).toEqual(345000);
+    expect(number('TAXE FONCIÈRE 423 €.')).toEqual(423);
   });
 
   it('returns zero for an empty number', () => {
-    assert.equal(number('There is no size in this string'), null);
+    expect(number('There is no size in this string')).toEqual(null);
   });
 
   it('returns null if the number is not valid', () => {
-    assert.equal(number(null), null);
-    assert.equal(number(undefined), null);
-    assert.equal(number('A string with no number'), null);
-    assert.equal(number(' '), null);
+    expect(number('')).toEqual(null);
+    expect(number('A string with no number')).toEqual(null);
+    expect(number(' ')).toEqual(null);
   });
 });

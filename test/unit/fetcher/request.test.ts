@@ -1,11 +1,9 @@
-import * as assert from 'assert';
 import * as sinon from 'sinon';
-import * as requestLibrary from 'axios';
 import RequestFetcher from '../../../src/fetcher/request';
 
 class FakeRequest {
   get(options: any) {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       resolve({
         data: `<html></html>`,
         headers: {
@@ -19,7 +17,7 @@ class FakeRequest {
 describe('it gets page contents using request', () => {
   it('gets encoded page contents for a given url', () => {
     const request = new RequestFetcher('http://whatever.com');
-    request.getRequestLibrary = sinon.stub().returns(new FakeRequest);
+    request.getRequestLibrary = sinon.stub().returns(new FakeRequest());
 
     const expectedPage = {
       encoding: 'utf-8',
@@ -27,11 +25,8 @@ describe('it gets page contents using request', () => {
       url: 'http://whatever.com',
     };
 
-    return request.getPage().then((page) => {
-      assert.equal(
-        JSON.stringify(expectedPage),
-        JSON.stringify(page),
-      );
+    return request.getPage().then(page => {
+      expect(JSON.stringify(expectedPage)).toEqual(JSON.stringify(page));
     });
   });
 });
