@@ -14,7 +14,7 @@ export default class RequestFetcher implements Fetcher {
   getPage(): Promise<ScrapedPage> {
     return this.getPageResponse().then((response) => {
       const { headers, data: body } = response;
-      const encoding = guessEncoding(headers['Content-Type'], body);
+      const encoding = guessEncoding(headers['Content-Type'] as string, body);
       const page: ScrapedPage = {
         encoding,
         contents: encodePageContents(encoding, body),
