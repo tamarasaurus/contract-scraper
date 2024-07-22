@@ -1,27 +1,27 @@
 import Scraper from '../../index';
 
 const contract = {
-  itemSelector: '.blog-list .post-container',
+  itemSelector: '.row .card',
   puppeteer: true,
   attributes: {
     photo: {
-      type: 'background-image',
-      selector: '.sh-ratio-content',
-      attribute: 'style',
+      type: 'link',
+      selector: '.card-img-top',
+      attribute: 'src',
     },
     link: {
       type: 'link',
-      selector: 'a.post-overlay',
+      selector: 'a.title',
       attribute: 'href',
     },
     name: {
       type: 'text',
-      selector: 'h2',
+      selector: '.description',
     },
   },
 };
 
-const scraper = new Scraper('https://www.kazoart.com/blog/en/', contract);
+const scraper = new Scraper('https://webscraper.io/test-sites/e-commerce/allinone', contract);
 
 scraper.scrapePage().then(recipes => {
   console.log(recipes);

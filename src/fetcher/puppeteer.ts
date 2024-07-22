@@ -1,7 +1,7 @@
 import Fetcher from './fetcher';
 import { ScrapedPage } from '../fetcher/fetcher';
 import randomUserAgent from 'random-useragent';
-import puppeteer, { PuppeteerNodeLaunchOptions } from 'puppeteer';
+import puppeteer, { HTTPResponse, PuppeteerNodeLaunchOptions } from 'puppeteer';
 import { getContentTypeHeaders, guessEncoding } from '../tools/encoding';
 
 export default class PuppeteerFetcher implements Fetcher {
@@ -24,7 +24,7 @@ export default class PuppeteerFetcher implements Fetcher {
   }
 
   public async setupBrowser(): Promise<{
-    response: puppeteer.HTTPResponse;
+    response: HTTPResponse;
     contents: string;
   }> {
     const browserType = this.getBrowserType();
