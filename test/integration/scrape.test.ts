@@ -1,6 +1,7 @@
 import Scraper from '../../index';
 import { ScrapedPage } from '../../src/fetcher/fetcher';
 import * as sinon from 'sinon';
+import { expect, describe, it } from 'vitest'
 
 const url = 'http://characters.com';
 

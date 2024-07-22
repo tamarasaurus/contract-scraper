@@ -4,6 +4,7 @@ import { ScrapedPage } from '../../src/fetcher/fetcher';
 import HTMLProvider from '../../src/provider/html';
 import * as sinon from 'sinon';
 import RequestFetcher from '../../src/fetcher/request';
+import { expect, describe, it, beforeEach } from 'vitest'
 
 const contract = {
   itemSelector: 'li[itemtype=http://schema.org/Offer]',

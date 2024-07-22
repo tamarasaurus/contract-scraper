@@ -1,4 +1,5 @@
 import link from '../../../src/attribute/link';
+import { expect, describe, it } from 'vitest'
 
 describe('creates a link attribute', () => {
   it('extracts a full url from a string', () => {

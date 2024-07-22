@@ -53,7 +53,7 @@ class Scraper {
     }
 
     if (message) {
-      throw Error(message);
+      throw message;
     }
 
     const fetcher = this.getFetcher();
@@ -74,7 +74,7 @@ class Scraper {
     }
 
     if (message) {
-      throw Error(message);
+      throw message;
     }
 
     const fetcher = this.getFetcher();
@@ -104,9 +104,7 @@ class Scraper {
     }
   }
 
-  public contractIsValid(attributes: { [name: string]: any }): {
-    message: string | null;
-  } {
+  public contractIsValid(attributes: { [name: string]: any }) {
     if (this.contract === null || this.contract === undefined) {
       return {
         message: 'Your contract is invalid, please check the specifications',

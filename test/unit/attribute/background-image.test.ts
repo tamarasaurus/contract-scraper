@@ -1,8 +1,10 @@
 import backgroundImage from '../../../src/attribute/background-image';
+import { expect, describe, it } from 'vitest'
 
 const rootUrl = 'http://website.com/';
 const rootUrlWithPath = 'http://website.com/whatever/more/stuff';
 const imageUrl = 'http://website.com/images/whatever.jpeg';
+
 describe('creates a background image attribute', () => {
   it('extracts a full url from a style tag', () => {
     const fullUrl = `color:red;background-image:url('${imageUrl}')`;
