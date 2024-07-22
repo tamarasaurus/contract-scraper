@@ -1,6 +1,5 @@
 import typescriptEslint from "@typescript-eslint/eslint-plugin";
 import prettier from "eslint-plugin-prettier";
-import jest from "eslint-plugin-jest";
 import globals from "globals";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -19,13 +18,11 @@ export default [...compat.extends("plugin:@typescript-eslint/recommended", "pret
     plugins: {
         "@typescript-eslint": typescriptEslint,
         prettier,
-        jest,
     },
 
     languageOptions: {
         globals: {
             ...globals.browser,
-            ...jest.environments.globals.globals,
         },
     },
 

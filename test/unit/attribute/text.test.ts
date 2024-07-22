@@ -1,4 +1,5 @@
 import text from '../../../src/attribute/text';
+import { expect, describe, it } from 'vitest'
 
 describe('creates a size attribute', () => {
   it('extracts a trimmed text from a string', () => {

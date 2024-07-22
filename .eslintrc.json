@@ -3,7 +3,7 @@
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "plugins": ["@typescript-eslint", "prettier", "jest"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "rules": {
     "@typescript-eslint/no-empty-function": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
@@ -28,7 +28,6 @@
     "yoda": ["error", "never", { "exceptRange": true }]
   },
   "env": {
-    "browser": true,
-    "jest/globals": true
+    "browser": true
   }
 }

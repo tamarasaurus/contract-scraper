@@ -1,4 +1,5 @@
 import size from '../../../src/attribute/size';
+import { expect, describe, it } from 'vitest'
 
 describe('creates a size attribute', () => {
   it('extracts a size number from a mixed string', () => {

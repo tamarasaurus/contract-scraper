@@ -1,5 +1,6 @@
 import PuppeteerFetcher from '../../../src/fetcher/puppeteer';
 import * as sinon from 'sinon';
+import { expect, describe, it } from 'vitest'
 
 class FakePage {
   setUserAgent() {}

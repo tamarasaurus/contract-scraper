@@ -1,5 +1,6 @@
 import * as sinon from 'sinon';
 import RequestFetcher from '../../../src/fetcher/request';
+import { expect, describe, it } from 'vitest'
 
 class FakeRequest {
   get(options: any) {

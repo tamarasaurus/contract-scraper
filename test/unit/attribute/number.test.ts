@@ -1,4 +1,5 @@
 import number from '../../../src/attribute/number';
+import { expect, describe, it } from 'vitest'
 
 describe('creates a number attribute', () => {
   it('returns the number from a number string', () => {
