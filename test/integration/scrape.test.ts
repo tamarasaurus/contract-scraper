@@ -282,7 +282,6 @@ it('returns the scraped page object', () => {
   };
 
   const scraper = new Scraper(url, contract);
-  const expectedData = [{ names: JSON.stringify({ first: 'Han Solo' }) }];
 
   scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
 
