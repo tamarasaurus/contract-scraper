@@ -15,7 +15,7 @@
     "watch": "tsc -w -p .",
     "lint": "eslint **/*.ts",
     "lint-fix": "eslint --fix **/*.ts",
-    "example": "ts-node ./src/examples/scrape",
+    "example": "ts-node ./src/examples/e2e",
     "example-wait": "ts-node ./src/examples/waitForPageLoadSelector.ts"
   },
   "repository": {

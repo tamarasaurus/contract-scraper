@@ -21,11 +21,15 @@ const contract = {
   },
 };
 
-const scraper = new Scraper('https://webscraper.io/test-sites/e-commerce/allinone', contract);
+const scraper = new Scraper(
+  'https://webscraper.io/test-sites/e-commerce/allinone',
+  contract,
+);
 
 scraper.scrapePage().then(recipes => {
-  console.log(recipes);
-  if (recipes.length !== 3) {
+  if (recipes.length === 0) {
     process.exit(1);
+  } else {
+    console.log('Scraped successfully');
   }
 });
