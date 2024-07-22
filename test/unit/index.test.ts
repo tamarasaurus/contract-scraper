@@ -2,9 +2,8 @@ import Scraper from '../../index';
 import PuppeteerFetcher from '../../src/fetcher/puppeteer';
 import { ScrapedPage } from '../../src/fetcher/fetcher';
 import HTMLProvider from '../../src/provider/html';
-import * as sinon from 'sinon';
 import RequestFetcher from '../../src/fetcher/request';
-import { expect, describe, it, beforeEach } from 'vitest'
+import { expect, describe, it, beforeEach, vi } from 'vitest';
 
 const contract = {
   itemSelector: 'li[itemtype=http://schema.org/Offer]',
@@ -115,10 +114,10 @@ describe('Scrapes a URL based on JSON configuration', () => {
       }
     }
 
-    scraper.getFetcher = sinon
-      .stub()
-      .returns(new FakeFetcher('http://leboncoin.com'));
-    scraper.getProvider = sinon.stub().returns(new ProviderStub());
+    scraper.getFetcher = vi
+      .fn()
+      .mockImplementation(() => new FakeFetcher('http://leboncoin.com'));
+    scraper.getProvider = vi.fn().mockImplementation(() => new ProviderStub());
 
     return scraper
       .scrapePage()

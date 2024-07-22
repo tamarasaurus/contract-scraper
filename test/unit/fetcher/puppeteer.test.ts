@@ -1,6 +1,5 @@
 import PuppeteerFetcher from '../../../src/fetcher/puppeteer';
-import * as sinon from 'sinon';
-import { expect, describe, it } from 'vitest'
+import { expect, describe, it, vi } from 'vitest';
 
 class FakePage {
   setUserAgent() {}
@@ -35,7 +34,9 @@ class FakePuppeteer {
 }
 
 const puppeteerFetcher = new PuppeteerFetcher('http://leboncoin.com');
-puppeteerFetcher.getBrowserType = sinon.stub().returns(new FakePuppeteer());
+puppeteerFetcher.getBrowserType = vi
+  .fn()
+  .mockImplementation(() => new FakePuppeteer());
 
 describe('it fetches data from puppeteer', () => {
   it('sets up the browser', async () => {

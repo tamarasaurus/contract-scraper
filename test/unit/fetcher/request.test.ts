@@ -1,6 +1,5 @@
-import * as sinon from 'sinon';
 import RequestFetcher from '../../../src/fetcher/request';
-import { expect, describe, it } from 'vitest'
+import { expect, describe, it, vi } from 'vitest';
 
 class FakeRequest {
   get(options: any) {
@@ -18,7 +17,9 @@ class FakeRequest {
 describe('it gets page contents using request', () => {
   it('gets encoded page contents for a given url', () => {
     const request = new RequestFetcher('http://whatever.com');
-    request.getRequestLibrary = sinon.stub().returns(new FakeRequest());
+    request.getRequestLibrary = vi
+      .fn()
+      .mockImplementation(() => new FakeRequest());
 
     const expectedPage = {
       encoding: 'utf-8',
