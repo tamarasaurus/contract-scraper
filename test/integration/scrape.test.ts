@@ -1,7 +1,6 @@
 import Scraper from '../../index';
 import { ScrapedPage } from '../../src/fetcher/fetcher';
-import * as sinon from 'sinon';
-import { expect, describe, it } from 'vitest'
+import { expect, it, vi } from 'vitest';
 
 const url = 'http://characters.com';
 
@@ -134,7 +133,7 @@ it('returns scraped data for a url and contract', () => {
   };
 
   const scraper = new Scraper(url, contract);
-  scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
+  scraper.getFetcher = vi.fn().mockImplementation(() => new FakeFetcher(url));
 
   const expectedData = [
     {
@@ -227,7 +226,7 @@ it('scrapes a json schema script tag for a url and contract', () => {
     },
   ];
 
-  scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
+  scraper.getFetcher = vi.fn().mockImplementation(() => new FakeFetcher(url));
 
   return scraper
     .scrapePage()
@@ -256,7 +255,7 @@ it('scrapes raw html from a script tag', () => {
   const scraper = new Scraper(url, contract);
   const expectedData = [{ names: JSON.stringify({ first: 'Han Solo' }) }];
 
-  scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
+  scraper.getFetcher = vi.fn().mockImplementation(() => new FakeFetcher(url));
 
   return scraper
     .scrapePage()
@@ -284,7 +283,7 @@ it('returns the scraped page object', () => {
 
   const scraper = new Scraper(url, contract);
 
-  scraper.getFetcher = sinon.stub().returns(new FakeFetcher(url));
+  scraper.getFetcher = vi.fn().mockImplementation(() => new FakeFetcher(url));
 
   return scraper
     .getPageContents()
